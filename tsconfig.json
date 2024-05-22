@@ -69,8 +69,8 @@
       "@models/*": [
         "models/*"
       ],
-      "@routes/*": [
-        "routes/*"
+      "@repositories/*": [
+        "repositories/*"
       ],
       "@services/*": [
         "services/*"
