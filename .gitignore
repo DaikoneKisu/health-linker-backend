@@ -1,0 +1,7 @@
+node_modules
+dist
+generated
+src/logs
+pruebas.ts
+.env.*
+!.env.example

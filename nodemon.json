@@ -1,0 +1,9 @@
+{
+  "verbose": true,
+  "watch": ["src", ".env.development"],
+  "ext": "ts,json",
+  "ignore": ["src/logs/*", "src/**/*.test.ts", "dist", "node_modules", ".git"],
+  "execMap": {
+    "ts": "tsx"
+  }
+}
