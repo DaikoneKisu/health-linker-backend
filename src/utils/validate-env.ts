@@ -1,4 +1,5 @@
 import { bool, cleanEnv, port, str } from 'envalid'
+import { nat } from '@utils/nat'
 
 export const validateEnv = () => {
   return cleanEnv(process.env, {
@@ -14,6 +15,8 @@ export const validateEnv = () => {
     DATABASE_PORT: port(),
     DATABASE_NAME: str(),
     DATABASE_USER: str(),
-    DATABASE_PASSWORD: str()
+    DATABASE_PASSWORD: str(),
+    BCRYPT_SALT_ROUNDS: nat(),
+    EXPIRES_IN: nat()
   })
 }

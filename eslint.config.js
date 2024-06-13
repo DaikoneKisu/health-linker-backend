@@ -14,7 +14,8 @@ module.exports = config(
     files: ['src/**/*.ts'],
     rules: {
       'no-undef': 'off',
-      ...drizzle.configs.recommended.rules
+      'drizzle/enforce-delete-with-where': ['error', { drizzleObjectName: ['_db', 'db'] }],
+      'drizzle/enforce-update-with-where': ['error', { drizzleObjectName: ['_db', 'db'] }]
     },
     languageOptions: {
       parserOptions: {
