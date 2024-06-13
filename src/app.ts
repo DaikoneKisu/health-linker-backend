@@ -6,7 +6,7 @@ import cors from 'cors'
 import express from 'express'
 import helmet from 'helmet'
 import morgan from 'morgan'
-import { NODE_ENV, PORT, ORIGIN, LOG_FORMAT, CREDENTIALS, PUBLIC_DIR } from '@/config/env'
+import { NODE_ENV, PORT, ORIGIN, LOG_FORMAT, CREDENTIALS, PUBLIC_DIR, isProd } from '@/config/env'
 import { useExpressServer } from 'routing-controllers'
 import { type ClassConstructor } from './types/class-constructor.type'
 // import { ErrorMiddleware } from '@middlewares/error.middleware';
@@ -18,8 +18,8 @@ export class App {
 
   constructor(controllers: ClassConstructor<unknown>[]) {
     this.app = express()
-    this.env = NODE_ENV || 'development'
-    this.port = PORT || 3000
+    this.env = NODE_ENV
+    this.port = PORT
 
     this.app = useExpressServer(this.app, { validation: true, classTransformer: true, controllers })
     this.initializeMiddlewares()
@@ -31,7 +31,7 @@ export class App {
   public listen() {
     this.app.listen(this.port, () => {
       console.info(`=================================`)
-      console.info(`${this.env === 'production' ? '=' : ''}======= ENV: ${this.env} ========`)
+      console.info(`${isProd ? '=' : ''}======= ENV: ${this.env} ========`)
       console.info(`= 🚀 App listening on port ${this.port} =`)
       console.info(`=================================`)
     })
