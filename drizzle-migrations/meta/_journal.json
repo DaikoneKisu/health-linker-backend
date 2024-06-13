@@ -1,0 +1,27 @@
+{
+  "version": "6",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1716412308322,
+      "tag": "0000_next_cerebro",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1716414413193,
+      "tag": "0001_minor_justin_hammer",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1716415370817,
+      "tag": "0002_public_master_chief",
+      "breakpoints": true
+    }
+  ]
+}
