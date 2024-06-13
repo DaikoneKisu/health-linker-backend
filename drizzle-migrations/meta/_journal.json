@@ -22,6 +22,13 @@
       "when": 1716415370817,
       "tag": "0002_public_master_chief",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1718307559432,
+      "tag": "0003_cuddly_dagger",
+      "breakpoints": true
     }
   ]
 }
