@@ -101,9 +101,7 @@ export class UserRepository {
   ): Promise<FindUser | undefined> {
     const rows = await this._db
       .update(userModel)
-      .set({
-        password: updateUser.password
-      })
+      .set(updateUser)
       .where(eq(userModel.document, document))
       .returning({
         document: userModel.document,
