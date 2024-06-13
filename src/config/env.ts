@@ -15,5 +15,10 @@ export const {
   DATABASE_PORT,
   DATABASE_NAME,
   DATABASE_USER,
-  DATABASE_PASSWORD
+  DATABASE_PASSWORD,
+  BCRYPT_SALT_ROUNDS,
+  EXPIRES_IN,
+  isDev,
+  isTest,
+  isProd
 } = validateEnv()
