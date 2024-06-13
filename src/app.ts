@@ -21,8 +21,8 @@ export class App {
     this.env = NODE_ENV || 'development'
     this.port = PORT || 3000
 
+    this.app = useExpressServer(this.app, { validation: true, classTransformer: true, controllers })
     this.initializeMiddlewares()
-    this.app = useExpressServer(this.app, { controllers })
     this.initializeStaticFiles()
     // this.initializeSwagger();
     // this.initializeErrorHandling();
@@ -31,14 +31,10 @@ export class App {
   public listen() {
     this.app.listen(this.port, () => {
       console.info(`=================================`)
-      console.info(`======= ENV: ${this.env} ========`)
+      console.info(`${this.env === 'production' ? '=' : ''}======= ENV: ${this.env} ========`)
       console.info(`= 🚀 App listening on port ${this.port} =`)
       console.info(`=================================`)
     })
-  }
-
-  public getServer() {
-    return this.app
   }
 
   private initializeMiddlewares() {
