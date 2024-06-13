@@ -69,6 +69,9 @@ importers:
       '@eslint/js':
         specifier: ^9.3.0
         version: 9.3.0
+      '@types/bcrypt':
+        specifier: ^5.0.2
+        version: 5.0.2
       '@types/body-parser':
         specifier: ^1.19.5
         version: 1.19.5
@@ -633,6 +636,9 @@ packages:
 
   '@tsconfig/node16@1.0.4':
     resolution: {integrity: sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA==}
+
+  '@types/bcrypt@5.0.2':
+    resolution: {integrity: sha512-6atioO8Y75fNcbmj0G7UjI9lXN2pQ/IGJ2FWT4a/btd0Lk9lQalHLKhkgKVZ3r+spnmWUKfbMi1GEe9wyHQfNQ==}
 
   '@types/body-parser@1.19.5':
     resolution: {integrity: sha512-fB3Zu92ucau0iQ0JMCFQE7b/dv8Ot07NI3KaZIkIUNXq82k4eBAqUaneXfleGY9JWskeS9y+u0nXMyspcuQrCg==}
@@ -3006,6 +3012,10 @@ snapshots:
   '@tsconfig/node14@1.0.3': {}
 
   '@tsconfig/node16@1.0.4': {}
+
+  '@types/bcrypt@5.0.2':
+    dependencies:
+      '@types/node': 20.12.12
 
   '@types/body-parser@1.19.5':
     dependencies:
