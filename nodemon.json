@@ -4,6 +4,6 @@
   "ext": "ts,json",
   "ignore": ["src/logs/*", "src/**/*.test.ts", "dist", "node_modules", ".git"],
   "execMap": {
-    "ts": "tsx"
+    "ts": "ts-node -r tsconfig-paths/register --transpile-only"
   }
 }
