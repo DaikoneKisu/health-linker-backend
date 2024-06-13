@@ -1,8 +1,8 @@
+import { eq } from 'drizzle-orm'
 import { type PgDatabase } from '@/types/pg-database.type'
 import { pgDatabase } from '@/pg-database'
 import { Admin, FindAdmin, NewAdmin, UpdateAdmin } from '@/types/admin.type'
 import { adminModel } from '@/models/admin.model'
-import { eq } from 'drizzle-orm'
 
 export class AdminRepository {
   private readonly _db: PgDatabase = pgDatabase
