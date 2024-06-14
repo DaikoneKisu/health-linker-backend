@@ -8,12 +8,14 @@ export class AdminRepository {
   private readonly _db: PgDatabase = pgDatabase
 
   public async findAll(): Promise<FindAdmin[]> {
-    return await this._db
-      .select({
-        email: adminModel.email,
-        fullName: adminModel.fullName
-      })
-      .from(adminModel)
+    return (
+      (await this._db
+        .select({
+          email: adminModel.email,
+          fullName: adminModel.fullName
+        })
+        .from(adminModel)) || []
+    )
   }
 
   public async findWithLimitAndOffset(limit: number, offset: number): Promise<FindAdmin[]> {
