@@ -8,6 +8,7 @@ import { NewUser } from '@/types/new-user.type'
 import { UpdateUser } from '@/types/update-user.type'
 import { EncryptService } from '@/services/encrypt.service'
 import { ConflictError } from '@/exceptions/conflict-error'
+import { UserType } from '@/types/user-type.type'
 
 @injectable()
 export class UserService {
@@ -41,7 +42,7 @@ export class UserService {
     return await this._userRepository.getPassword(document)
   }
 
-  public async createUser(createUserDto: CreateUserDto) {
+  public async createUser(createUserDto: CreateUserDto & { userType: UserType }) {
     const userByDocument = await this.getUser(createUserDto.document)
     const userByEmail = await this._userRepository.findByEmail(createUserDto.email)
     const admin = await this._adminRepository.find(createUserDto.email)

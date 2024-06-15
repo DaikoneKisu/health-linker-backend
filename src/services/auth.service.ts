@@ -2,22 +2,41 @@ import { NotFoundError, UnauthorizedError } from 'routing-controllers'
 import { sign } from 'jsonwebtoken'
 import { EncryptService } from '@services/encrypt.service'
 import { UserService } from '@services/user.service'
+import { RuralProfessionalService } from './rural-professional.service'
 import { FindUser } from '@/types/find-user.type'
 import { User } from '@/types/user.type'
+import { UserType } from '@/types/user-type.type'
 import { CreateUserDto } from '@/dtos/user.dto'
+import { CreateRuralProfessionalDto } from '@/dtos/rural-professional.dto'
 import { EXPIRES_IN, SECRET_KEY } from '@/config/env'
 
 export class AuthService {
   private readonly _userService: UserService
   private readonly _encryptService: EncryptService
+  private readonly _ruralProfessionalService: RuralProfessionalService
 
-  constructor(userService: UserService, encryptService: EncryptService) {
+  constructor(
+    userService: UserService,
+    encryptService: EncryptService,
+    ruralProfessionalSerivce: RuralProfessionalService
+  ) {
     this._userService = userService
     this._encryptService = encryptService
+    this._ruralProfessionalService = ruralProfessionalSerivce
   }
 
-  public async signUp(createUserDto: CreateUserDto): Promise<string | undefined> {
+  public async specialistSignUp(
+    createUserDto: CreateUserDto & { userType: UserType }
+  ): Promise<string | undefined> {
     await this._userService.createUser(createUserDto)
+
+    return 'Usuario registrado con éxito.'
+  }
+
+  public async ruralProfessionalSignUp(
+    createRuralProfessionalDto: CreateRuralProfessionalDto & { userType: UserType }
+  ): Promise<string | undefined> {
+    await this._ruralProfessionalService.createRuralProfessional(createRuralProfessionalDto)
 
     return 'Usuario registrado con éxito.'
   }
