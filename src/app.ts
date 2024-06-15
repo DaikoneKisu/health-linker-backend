@@ -21,9 +21,16 @@ export class App {
     this.env = NODE_ENV
     this.port = PORT
 
-    this.app = useExpressServer(this.app, { validation: true, classTransformer: true, controllers })
-    this.initializeMiddlewares()
+    this.initializePreviousMiddlewares()
+
+    this.app = useExpressServer(this.app, {
+      validation: true,
+      classTransformer: true,
+      controllers
+    })
     this.initializeStaticFiles()
+
+    this.initializeAfterMiddlewares()
     // this.initializeSwagger();
     // this.initializeErrorHandling();
   }
@@ -37,13 +44,16 @@ export class App {
     })
   }
 
-  private initializeMiddlewares() {
+  private initializePreviousMiddlewares() {
     this.app.use(morgan(LOG_FORMAT, { stream: process.stdout }))
     this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS }))
-    this.app.use(helmet())
-    this.app.use(compression())
-    this.app.use(express.json())
     this.app.use(cookieParser())
+    this.app.use(express.json())
+    this.app.use(helmet())
+  }
+
+  private initializeAfterMiddlewares() {
+    this.app.use(compression())
   }
 
   private initializeStaticFiles() {
