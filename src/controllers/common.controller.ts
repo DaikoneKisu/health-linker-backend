@@ -3,6 +3,14 @@ import { Get, HttpCode, JsonController } from 'routing-controllers'
 @JsonController()
 export class CommonController {
   @HttpCode(200)
+  @Get()
+  ok() {
+    return {
+      message: 'Ok'
+    }
+  }
+
+  @HttpCode(200)
   @Get('/healthcheck')
   healthcheck() {
     return {
