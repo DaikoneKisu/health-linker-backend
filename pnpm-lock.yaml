@@ -20,6 +20,9 @@ importers:
       class-validator:
         specifier: ^0.14.1
         version: 0.14.1
+      class-validator-jsonschema:
+        specifier: ^5.0.1
+        version: 5.0.1(class-transformer@0.5.1)(class-validator@0.14.1)
       compression:
         specifier: ^1.7.4
         version: 1.7.4
@@ -65,6 +68,12 @@ importers:
       routing-controllers:
         specifier: ^0.10.4
         version: 0.10.4(class-transformer@0.5.1)(class-validator@0.14.1)
+      routing-controllers-openapi:
+        specifier: ^4.0.0
+        version: 4.0.0(routing-controllers@0.10.4(class-transformer@0.5.1)(class-validator@0.14.1))
+      swagger-ui-express:
+        specifier: ^5.0.1
+        version: 5.0.1(express@4.19.2)
     devDependencies:
       '@eslint/js':
         specifier: ^9.3.0
@@ -102,6 +111,9 @@ importers:
       '@types/pg':
         specifier: ^8.11.6
         version: 8.11.6
+      '@types/swagger-ui-express':
+        specifier: ^4.1.6
+        version: 4.1.6
       cross-env:
         specifier: ^7.0.3
         version: 7.0.3
@@ -697,6 +709,9 @@ packages:
   '@types/serve-static@1.15.7':
     resolution: {integrity: sha512-W8Ym+h8nhuRwaKPaDw34QUkwsGi6Rc4yYqvKFo5rm2FUEhCFbzVWrxXUxuKK8TASjWsysJY0nsmNCGhCOIsrOw==}
 
+  '@types/swagger-ui-express@4.1.6':
+    resolution: {integrity: sha512-UVSiGYXa5IzdJJG3hrc86e8KdZWLYxyEsVoUI4iPXc7CO4VZ3AfNP8d/8+hrDRIqz+HAaSMtZSqAsF3Nq2X/Dg==}
+
   '@types/validator@13.11.10':
     resolution: {integrity: sha512-e2PNXoXLr6Z+dbfx5zSh9TRlXJrELycxiaXznp4S5+D2M3b9bqJEitNHA5923jhnB2zzFiZHa2f0SI1HoIahpg==}
 
@@ -927,6 +942,12 @@ packages:
 
   class-transformer@0.5.1:
     resolution: {integrity: sha512-SQa1Ws6hUbfC98vKGxZH3KFY0Y1lm5Zm0SY8XX9zbK7FJCyVEac3ATW0RIpwzW+oOfmHE5PMPufDG9hCfoEOMw==}
+
+  class-validator-jsonschema@5.0.1:
+    resolution: {integrity: sha512-9uTdo5jSnJUj7f0dS8YZDqM0Fv1Uky0BWefswnNa2F4nRcKPCiEb5z3nDUaXyEzcERCrizE+0AGDSao1uSNX9g==}
+    peerDependencies:
+      class-transformer: ^0.4.0 || ^0.5.0
+      class-validator: ^0.14.0
 
   class-validator@0.14.1:
     resolution: {integrity: sha512-2VEG9JICxIqTpoK1eMzZqaV+u/EiwEJkMGzTrZf6sU/fwsnOITVgYJ8yojSy6CaXtO9V0Cc6ZQZ8h8m4UBuLwQ==}
@@ -1742,6 +1763,12 @@ packages:
     resolution: {integrity: sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw==}
     engines: {node: '>=10'}
 
+  lodash.capitalize@4.2.1:
+    resolution: {integrity: sha512-kZzYOKspf8XVX5AvmQF94gQW0lejFVgb80G85bU4ZWzoJ6C03PQg3coYAUpSTpQWelrZELd3XWgHzw4Ck5kaIw==}
+
+  lodash.groupby@4.6.0:
+    resolution: {integrity: sha512-5dcWxm23+VAoz+awKmBaiBvzox8+RqMgFhi7UvX9DHZr2HdxHXM/Wrf8cfKpsW37RNrvtPn6hSwNqurSILbmJw==}
+
   lodash.includes@4.3.0:
     resolution: {integrity: sha512-W3Bx6mdkRTGtlJISOvVD/lbqjTlPPUDTMnlXZFnVwi9NKJ6tiAk6LVdlhZMm17VZisqhKcgzpO5Wz91PCt5b0w==}
 
@@ -1765,6 +1792,9 @@ packages:
 
   lodash.once@4.1.1:
     resolution: {integrity: sha512-Sb487aTOCr9drQVL8pIxOzVhafOjZN9UU54hiN8PU3uAiSV7lx1yYNpbNmex2PK6dSJoNTSJUUswT651yww3Mg==}
+
+  lodash.startcase@4.4.0:
+    resolution: {integrity: sha512-+WKqsK294HMSc2jEbNgpHpd0JfIBhp7rEV4aqXWqFr6AlXov+SlcgB1Fv01y2kGe3Gc8nMW7VA0SrGuSkRfIEg==}
 
   lodash.throttle@4.1.1:
     resolution: {integrity: sha512-wIkUCfVKpVsWo3JSZlc+8MB5it+2AN5W8J7YVMST30UrvcQNZ1Okbj+rbVniijTWE6FGYy4XJq/rHkas8qJMLQ==}
@@ -1978,6 +2008,12 @@ packages:
 
   only@0.0.2:
     resolution: {integrity: sha512-Fvw+Jemq5fjjyWz6CpKx6w9s7xxqo3+JCyM0WXWeCSOboZ8ABkyvP8ID4CZuChA/wxSx+XSJmdOm8rGVyJ1hdQ==}
+
+  openapi3-ts@2.0.2:
+    resolution: {integrity: sha512-TxhYBMoqx9frXyOgnRHufjQfPXomTIHYKhSKJ6jHfj13kS8OEIhvmE8CTuQyKtjjWttAjX5DPxM1vmalEpo8Qw==}
+
+  openapi3-ts@3.2.0:
+    resolution: {integrity: sha512-/ykNWRV5Qs0Nwq7Pc0nJ78fgILvOT/60OxEmB3v7yQ8a8Bwcm43D4diaYazG/KBn6czA+52XYy931WFLMCUeSg==}
 
   optionator@0.9.4:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
@@ -2208,6 +2244,11 @@ packages:
     deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
 
+  routing-controllers-openapi@4.0.0:
+    resolution: {integrity: sha512-rObiqX3nLN63ARMj/uf1YKr3WYR8mmny0YR68U70EU5IH3MLe+2uA3r//EkPBj+kKrnOtL2NcfQwhlLiJsQlMg==}
+    peerDependencies:
+      routing-controllers: ^0.10.0
+
   routing-controllers@0.10.4:
     resolution: {integrity: sha512-o7EANDC78u/Hh8mLyPbc5noJYf/hOruk0CIcuMdpZM/jvlrgMTGObpcPNfm6HBi/lLhRlI3/ma/I6hCPKpucBQ==}
     peerDependencies:
@@ -2360,6 +2401,15 @@ packages:
   supports-color@7.2.0:
     resolution: {integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==}
     engines: {node: '>=8'}
+
+  swagger-ui-dist@5.17.14:
+    resolution: {integrity: sha512-CVbSfaLpstV65OnSjbXfVd6Sta3q3F7Cj/yYuvHMp1P90LztOLs6PfUnKEVAeiIVQt9u2SaPwv0LiH/OyMjHRw==}
+
+  swagger-ui-express@5.0.1:
+    resolution: {integrity: sha512-SrNU3RiBGTLLmFU8GIJdOdanJTl4TOmT27tt3bWWHppqYmAZ6IDuEuBvMU6nZq0zLEe6b/1rACXCgLZqO6ZfrA==}
+    engines: {node: '>= v0.10.32'}
+    peerDependencies:
+      express: '>=4.0.0 || >=5.0.0-beta'
 
   tar@6.2.1:
     resolution: {integrity: sha512-DZ4yORTwrbTj/7MZYq2w+/ZFdI6OZ/f9SFHR+71gIVUZhOQPHzVCLpvRnPgyaMpfWxxk/4ONva3GQSyNIKRv6A==}
@@ -2543,6 +2593,10 @@ packages:
 
   yallist@4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
+
+  yaml@1.10.2:
+    resolution: {integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==}
+    engines: {node: '>= 6'}
 
   yaml@2.3.4:
     resolution: {integrity: sha512-8aAvwVUSHpfEqTQ4w/KMlf3HcRdt50E5ODIQJBw1fQ5RL34xabzxtUlzTXVqc4rkZsPbvrXKWnABCD7kWSmocA==}
@@ -3099,6 +3153,11 @@ snapshots:
       '@types/node': 20.12.12
       '@types/send': 0.17.4
 
+  '@types/swagger-ui-express@4.1.6':
+    dependencies:
+      '@types/express': 4.17.21
+      '@types/serve-static': 1.15.7
+
   '@types/validator@13.11.10': {}
 
   '@typescript-eslint/eslint-plugin@7.9.0(@typescript-eslint/parser@7.9.0(eslint@9.3.0)(typescript@5.4.5))(eslint@9.3.0)(typescript@5.4.5)':
@@ -3363,6 +3422,16 @@ snapshots:
   chownr@2.0.0: {}
 
   class-transformer@0.5.1: {}
+
+  class-validator-jsonschema@5.0.1(class-transformer@0.5.1)(class-validator@0.14.1):
+    dependencies:
+      class-transformer: 0.5.1
+      class-validator: 0.14.1
+      lodash.groupby: 4.6.0
+      lodash.merge: 4.6.2
+      openapi3-ts: 3.2.0
+      reflect-metadata: 0.1.14
+      tslib: 2.6.2
 
   class-validator@0.14.1:
     dependencies:
@@ -4290,6 +4359,10 @@ snapshots:
     dependencies:
       p-locate: 5.0.0
 
+  lodash.capitalize@4.2.1: {}
+
+  lodash.groupby@4.6.0: {}
+
   lodash.includes@4.3.0: {}
 
   lodash.isboolean@3.0.3: {}
@@ -4305,6 +4378,8 @@ snapshots:
   lodash.merge@4.6.2: {}
 
   lodash.once@4.1.1: {}
+
+  lodash.startcase@4.4.0: {}
 
   lodash.throttle@4.1.1: {}
 
@@ -4508,6 +4583,14 @@ snapshots:
   only@0.0.2:
     optional: true
 
+  openapi3-ts@2.0.2:
+    dependencies:
+      yaml: 1.10.2
+
+  openapi3-ts@3.2.0:
+    dependencies:
+      yaml: 2.3.4
+
   optionator@0.9.4:
     dependencies:
       deep-is: 0.1.4
@@ -4546,8 +4629,7 @@ snapshots:
 
   path-to-regexp@0.1.7: {}
 
-  path-to-regexp@6.2.2:
-    optional: true
+  path-to-regexp@6.2.2: {}
 
   path-type@4.0.0: {}
 
@@ -4706,6 +4788,17 @@ snapshots:
   rimraf@3.0.2:
     dependencies:
       glob: 7.2.3
+
+  routing-controllers-openapi@4.0.0(routing-controllers@0.10.4(class-transformer@0.5.1)(class-validator@0.14.1)):
+    dependencies:
+      lodash.capitalize: 4.2.1
+      lodash.merge: 4.6.2
+      lodash.startcase: 4.4.0
+      openapi3-ts: 2.0.2
+      path-to-regexp: 6.2.2
+      reflect-metadata: 0.1.14
+      routing-controllers: 0.10.4(class-transformer@0.5.1)(class-validator@0.14.1)
+      tslib: 2.6.2
 
   routing-controllers@0.10.4(class-transformer@0.5.1)(class-validator@0.14.1):
     dependencies:
@@ -4877,6 +4970,13 @@ snapshots:
   supports-color@7.2.0:
     dependencies:
       has-flag: 4.0.0
+
+  swagger-ui-dist@5.17.14: {}
+
+  swagger-ui-express@5.0.1(express@4.19.2):
+    dependencies:
+      express: 4.19.2
+      swagger-ui-dist: 5.17.14
 
   tar@6.2.1:
     dependencies:
@@ -5054,6 +5154,8 @@ snapshots:
     optional: true
 
   yallist@4.0.0: {}
+
+  yaml@1.10.2: {}
 
   yaml@2.3.4: {}
 
