@@ -1,13 +1,4 @@
-import {
-  IsEmail,
-  IsIn,
-  IsNumberString,
-  IsOptional,
-  IsString,
-  Length,
-  Matches
-} from 'class-validator'
-import { UserType, UserTypeArray } from '@/types/user-type.type'
+import { IsEmail, IsNumberString, IsOptional, IsString, Length, Matches } from 'class-validator'
 import { NewUser } from '@/types/new-user.type'
 import { UpdateUser } from '@/types/update-user.type'
 
@@ -29,7 +20,7 @@ export class UserCredentialsDto {
   }
 }
 
-export class CreateUserDto implements NewUser {
+export class CreateUserDto implements Omit<NewUser, 'userType'> {
   @IsString()
   @IsNumberString()
   @Length(10, 10, {
@@ -53,22 +44,11 @@ export class CreateUserDto implements NewUser {
   })
   public password: string
 
-  @IsString()
-  @IsIn(UserTypeArray)
-  public userType: UserType
-
-  constructor(
-    document: string,
-    email: string,
-    fullName: string,
-    password: string,
-    userType: UserType
-  ) {
+  constructor(document: string, email: string, fullName: string, password: string) {
     this.document = document
     this.email = email
     this.fullName = fullName
     this.password = password
-    this.userType = userType
   }
 }
 
@@ -92,7 +72,7 @@ export class UpdateUserDto implements Omit<UpdateUser, 'isVerified'> {
   })
   public password?: string
 
-  constructor(email: string, fullName: string, password: string) {
+  constructor(email?: string, fullName?: string, password?: string) {
     this.email = email
     this.fullName = fullName
     this.password = password

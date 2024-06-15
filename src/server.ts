@@ -3,7 +3,14 @@ import { CommonController } from '@/controllers/common.controller'
 import { UserController } from '@/controllers/user.controller'
 import { AuthController } from '@/controllers/auth.controllers'
 import { AdminController } from '@/controllers/admin.controller'
+import { RuralProfessionalController } from './controllers/rural-professional.controller'
 
-const app = new App([CommonController, UserController, AuthController, AdminController])
+const app = new App([
+  CommonController,
+  UserController,
+  AuthController,
+  AdminController,
+  RuralProfessionalController
+])
 
 app.listen()
