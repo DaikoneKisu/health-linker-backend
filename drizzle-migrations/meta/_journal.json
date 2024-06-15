@@ -29,6 +29,20 @@
       "when": 1718307559432,
       "tag": "0003_cuddly_dagger",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1718457367770,
+      "tag": "0004_far_screwball",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1718457544074,
+      "tag": "0005_mysterious_red_wolf",
+      "breakpoints": true
     }
   ]
 }
