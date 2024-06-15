@@ -8,14 +8,11 @@ import helmet from 'helmet'
 import morgan from 'morgan'
 import { serve, setup } from 'swagger-ui-express'
 import { NODE_ENV, PORT, ORIGIN, LOG_FORMAT, CREDENTIALS, PUBLIC_DIR, isProd } from '@/config/env'
-import {
-  RoutingControllersOptions,
-  getMetadataArgsStorage,
-  useExpressServer
-} from 'routing-controllers'
+import { getMetadataArgsStorage, useExpressServer } from 'routing-controllers'
 import { type ClassConstructor } from './types/class-constructor.type'
 import { routingControllersToSpec } from 'routing-controllers-openapi'
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema'
+import { SchemaObject } from 'openapi3-ts'
 // import { ErrorMiddleware } from '@middlewares/error.middleware';
 
 export class App {
@@ -71,9 +68,9 @@ export class App {
     const storage = getMetadataArgsStorage()
     const schemas = validationMetadatasToSchemas({
       refPointerPrefix: '#/dtos'
-    })
+    }) as { [schema: string]: SchemaObject }
     const spec = routingControllersToSpec(storage, undefined, {
-      components: { schemas },
+      components: { schemas: schemas },
       info: {
         title: 'Health Linker Backend',
         version: '1.0.0',
