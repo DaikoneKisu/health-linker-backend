@@ -8,26 +8,29 @@ import {
   Param,
   Patch,
   Post,
-  QueryParam
+  QueryParams
 } from 'routing-controllers'
 import { UserService } from '@/services/user.service'
 import { UserRepository } from '@/repositories/user.repository'
 import { User } from '@/types/user.type'
 import { CreateUserDto, UpdateUserDto } from '@/dtos/user.dto'
 import { EncryptService } from '@/services/encrypt.service'
+import { AdminRepository } from '@/repositories/admin.repository'
+import { PaginationQuery } from '@/dtos/pagination-query.dto'
 
 //TODO: Make validations reject on not specified fields
 @JsonController('/users')
 export class UserController {
   private readonly _userService: UserService = new UserService(
     new UserRepository(),
-    new EncryptService()
+    new EncryptService(),
+    new AdminRepository()
   )
 
   @HttpCode(200)
   @Get()
-  public getPaginated(@QueryParam('page') page: number, @QueryParam('size') size: number) {
-    return this._userService.getPaginatedUsers(page, size)
+  public getPaginated(@QueryParams() paginationQuery: PaginationQuery) {
+    return this._userService.getPaginatedUsers(paginationQuery.page, paginationQuery.size)
   }
 
   @HttpCode(200)

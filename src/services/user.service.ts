@@ -1,8 +1,9 @@
 import { injectable } from 'inversify'
 import { isNotEmptyObject } from 'class-validator'
 import { UserRepository } from '@/repositories/user.repository'
-import { User } from '@/types/user.type'
+import { AdminRepository } from '@/repositories/admin.repository'
 import { CreateUserDto, UpdateUserDto } from '@/dtos/user.dto'
+import { User } from '@/types/user.type'
 import { NewUser } from '@/types/new-user.type'
 import { UpdateUser } from '@/types/update-user.type'
 import { EncryptService } from '@/services/encrypt.service'
@@ -11,11 +12,17 @@ import { ConflictError } from '@/exceptions/conflict-error'
 @injectable()
 export class UserService {
   private readonly _userRepository: UserRepository
+  private readonly _adminRepository: AdminRepository
   private readonly _encryptService: EncryptService
 
-  constructor(userRepository: UserRepository, encryptService: EncryptService) {
+  constructor(
+    userRepository: UserRepository,
+    encryptService: EncryptService,
+    adminRepository: AdminRepository
+  ) {
     this._userRepository = userRepository
     this._encryptService = encryptService
+    this._adminRepository = adminRepository
   }
 
   public async getAllUsers() {
@@ -37,8 +44,9 @@ export class UserService {
   public async createUser(createUserDto: CreateUserDto) {
     const userByDocument = await this.getUser(createUserDto.document)
     const userByEmail = await this._userRepository.findByEmail(createUserDto.email)
+    const admin = await this._adminRepository.find(createUserDto.email)
 
-    if (userByDocument || userByEmail) {
+    if (userByDocument || userByEmail || admin) {
       //! This could be a security risk, as it could allow an attacker to enumerate users (https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html)
       //TODO: Implement a way to handle consistently the error message for both existent and non-existent users
       throw new ConflictError(`El usuario con el documento y/o email provisto ya está registrado.`)
@@ -52,8 +60,6 @@ export class UserService {
       userType: createUserDto.userType
     }
 
-    //TODO: Check if user is not admin, both via email and document
-
     //TODO: Handle case when UserRespository.create returns undefined
     return await this._userRepository.create(newUser)
   }
@@ -63,8 +69,9 @@ export class UserService {
 
     if (updateUserDto.email) {
       const userByEmail = await this._userRepository.findByEmail(updateUserDto.email)
+      const admin = await this._adminRepository.find(updateUserDto.email)
 
-      if (userByEmail) {
+      if (userByEmail || admin) {
         //! This could be a security risk, as it could allow an attacker to enumerate users (https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html)
         //TODO: Implement a way to handle consistently the error message for both existent and non-existent users
         throw new ConflictError(`El usuario con el email provisto ya está registrado.`)
