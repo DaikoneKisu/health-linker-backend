@@ -16,12 +16,14 @@ import { EncryptService } from '@/services/encrypt.service'
 import { PaginationQuery } from '@/dtos/pagination-query.dto'
 import { Admin } from '@/types/admin.type'
 import { CreateAdminDto, UpdateAdminDto } from '@/dtos/admin.dto'
+import { UserRepository } from '@/repositories/user.repository'
 
 @JsonController('/admins')
 export class AdminController {
   private readonly _adminService: AdminService = new AdminService(
     new AdminRepository(),
-    new EncryptService()
+    new EncryptService(),
+    new UserRepository()
   )
 
   @HttpCode(200)

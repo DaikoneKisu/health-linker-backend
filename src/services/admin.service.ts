@@ -1,17 +1,24 @@
 import { CreateAdminDto, UpdateAdminDto } from '@/dtos/admin.dto'
 import { ConflictError } from '@/exceptions/conflict-error'
 import { AdminRepository } from '@/repositories/admin.repository'
+import { UserRepository } from '@/repositories/user.repository'
 import { EncryptService } from '@/services/encrypt.service'
 import { Admin, NewAdmin, UpdateAdmin } from '@/types/admin.type'
 import { isNotEmptyObject } from 'class-validator'
 
 export class AdminService {
   private readonly _adminRepository: AdminRepository
+  private readonly _userRepository: UserRepository
   private readonly _encryptService: EncryptService
 
-  constructor(adminRepository: AdminRepository, encryptService: EncryptService) {
+  constructor(
+    adminRepository: AdminRepository,
+    encryptService: EncryptService,
+    userRepository: UserRepository
+  ) {
     this._adminRepository = adminRepository
     this._encryptService = encryptService
+    this._userRepository = userRepository
   }
 
   public async getAllAdmins() {
@@ -32,8 +39,9 @@ export class AdminService {
 
   public async createAdmin(createAdminDto: CreateAdminDto) {
     const admin = await this.getAdmin(createAdminDto.email)
+    const userByEmail = await this._userRepository.findByEmail(createAdminDto.email)
 
-    if (admin) {
+    if (admin || userByEmail) {
       //! This could be a security risk, as it could allow an attacker to enumerate admins (https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html)
       //TODO: Implement a way to handle consistently the error message for both existent and non-existent admins
       throw new ConflictError('El administrador con el email provisto ya está registrado.')
@@ -44,8 +52,6 @@ export class AdminService {
       fullName: createAdminDto.fullName,
       password: await this._encryptService.encryptPassword(createAdminDto.password)
     }
-
-    //TODO: Check if admin is not user via email
 
     //TODO: Handle case when AdminRespository.create returns undefined
     return await this._adminRepository.create(newAdmin)
