@@ -3,11 +3,15 @@ import { AuthService } from '@/services/auth.service'
 import { UserService } from '@/services/user.service'
 import { EncryptService } from '@/services/encrypt.service'
 import { RuralProfessionalService } from '@/services/rural-professional.service'
+import { SpecialistService } from '@/services/specialist.service'
 import { UserRepository } from '@/repositories/user.repository'
 import { AdminRepository } from '@/repositories/admin.repository'
+import { SpecialtyRepository } from '@/repositories/specialty.repository'
+import { RuralProfessionalRepository } from '@/repositories/rural-professional.repository'
+import { SpecialistRepository } from '@/repositories/specialist.repository'
 import { UserCredentialsDto } from '@/dtos/user.dto'
 import { CreateRuralProfessionalDto } from '@/dtos/rural-professional.dto'
-import { RuralProfessionalRepository } from '@/repositories/rural-professional.repository'
+import { CreateSpecialistDto } from '@/dtos/specialist.dto'
 
 @JsonController('/auth')
 export class AuthController {
@@ -17,14 +21,19 @@ export class AuthController {
     new RuralProfessionalService(
       new RuralProfessionalRepository(),
       new UserService(new UserRepository(), new EncryptService(), new AdminRepository())
+    ),
+    new SpecialistService(
+      new SpecialistRepository(),
+      new UserService(new UserRepository(), new EncryptService(), new AdminRepository()),
+      new SpecialtyRepository()
     )
   )
 
-  // @HttpCode(200)
-  // @Post('/signup/specialist')
-  // public specialistSignUp(@Body() createUserDto: CreateUserDto) {
-  //   return this._authService.signUp({ ...createUserDto, userType: 'specialist' })
-  // }
+  @HttpCode(200)
+  @Post('/signup/specialist')
+  public specialistSignUp(@Body() createSpecialistDto: CreateSpecialistDto) {
+    return this._authService.specialistSignUp({ ...createSpecialistDto, userType: 'specialist' })
+  }
 
   @HttpCode(200)
   @Post('/signup/rural-professional')

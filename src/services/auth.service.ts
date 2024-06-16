@@ -6,29 +6,33 @@ import { RuralProfessionalService } from './rural-professional.service'
 import { FindUser } from '@/types/find-user.type'
 import { User } from '@/types/user.type'
 import { UserType } from '@/types/user-type.type'
-import { CreateUserDto } from '@/dtos/user.dto'
 import { CreateRuralProfessionalDto } from '@/dtos/rural-professional.dto'
 import { EXPIRES_IN, SECRET_KEY } from '@/config/env'
+import { SpecialistService } from './specialist.service'
+import { CreateSpecialistDto } from '@/dtos/specialist.dto'
 
 export class AuthService {
   private readonly _userService: UserService
   private readonly _encryptService: EncryptService
   private readonly _ruralProfessionalService: RuralProfessionalService
+  private readonly _specialistService: SpecialistService
 
   constructor(
     userService: UserService,
     encryptService: EncryptService,
-    ruralProfessionalSerivce: RuralProfessionalService
+    ruralProfessionalSerivce: RuralProfessionalService,
+    specialistService: SpecialistService
   ) {
     this._userService = userService
     this._encryptService = encryptService
     this._ruralProfessionalService = ruralProfessionalSerivce
+    this._specialistService = specialistService
   }
 
   public async specialistSignUp(
-    createUserDto: CreateUserDto & { userType: UserType }
+    createSpecialistDto: CreateSpecialistDto & { userType: UserType }
   ): Promise<string | undefined> {
-    await this._userService.createUser(createUserDto)
+    await this._specialistService.createSpecialist(createSpecialistDto)
 
     return 'Usuario registrado con éxito.'
   }
@@ -65,8 +69,6 @@ export class AuthService {
   }
 
   private tokenize(user: FindUser): string {
-    console.log()
-
     return sign(user, SECRET_KEY, {
       expiresIn: EXPIRES_IN,
       notBefore: '0ms',
