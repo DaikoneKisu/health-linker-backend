@@ -1,3 +1,5 @@
+import { isNotEmptyObject } from 'class-validator'
+import { InternalServerError } from 'routing-controllers'
 import {
   CreateRuralProfessionalDto,
   UpdateRuralProfessionalDto
@@ -9,8 +11,6 @@ import {
   UpdateRuralProfessional
 } from '@/types/rural-professional.type'
 import { UserService } from './user.service'
-import { InternalServerError } from 'routing-controllers'
-import { isNotEmptyObject } from 'class-validator'
 
 export class RuralProfessionalService {
   private readonly _ruralProfessionalRepository: RuralProfessionalRepository
@@ -91,6 +91,7 @@ export class RuralProfessionalService {
     return await this._ruralProfessionalRepository.update(document, updateRuralProfessional)
   }
 
+  //! This method is not correctly implemented, if user is deleted, rural professional is also deleted, so it makes no sense to delete user before rural professional
   public async deleteRuralProfessional(document: RuralProfessional['document']) {
     const userDeleted = await this._userService.deleteUser(document)
 
