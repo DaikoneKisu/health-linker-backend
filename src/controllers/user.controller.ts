@@ -12,14 +12,18 @@ import {
 } from 'routing-controllers'
 import { UserService } from '@/services/user.service'
 import { EncryptService } from '@/services/encrypt.service'
+import { SpecialistService } from '@/services/specialist.service'
 import { RuralProfessionalService } from '@/services/rural-professional.service'
-import { User } from '@/types/user.type'
-import { UpdateUserDto } from '@/dtos/user.dto'
 import { UserRepository } from '@/repositories/user.repository'
 import { AdminRepository } from '@/repositories/admin.repository'
-import { PaginationQuery } from '@/dtos/pagination-query.dto'
+import { SpecialtyRepository } from '@/repositories/specialty.repository'
+import { SpecialistRepository } from '@/repositories/specialist.repository'
 import { RuralProfessionalRepository } from '@/repositories/rural-professional.repository'
+import { UpdateUserDto } from '@/dtos/user.dto'
+import { PaginationQuery } from '@/dtos/pagination-query.dto'
+import { CreateSpecialistDto } from '@/dtos/specialist.dto'
 import { CreateRuralProfessionalDto } from '@/dtos/rural-professional.dto'
+import { User } from '@/types/user.type'
 
 //TODO: Make validations reject on not specified fields
 @JsonController('/users')
@@ -31,6 +35,11 @@ export class UserController {
   )
   private readonly _ruralProfessionalService: RuralProfessionalService =
     new RuralProfessionalService(new RuralProfessionalRepository(), this._userService)
+  private readonly _specialistService: SpecialistService = new SpecialistService(
+    new SpecialistRepository(),
+    this._userService,
+    new SpecialtyRepository()
+  )
 
   @HttpCode(200)
   @Get()
@@ -51,15 +60,14 @@ export class UserController {
     return this._userService.getUser(document)
   }
 
-  //TODO: create specialist
-  // @HttpCode(201)
-  // @Post('/create-specialist')
-  // public createSpecialist(@Body() createUserDto: CreateUserDto) {
-  //   return this._userService.createUser(createUserDto)
-  // }
+  @HttpCode(201)
+  @Post('/specialist')
+  public createSpecialist(@Body() createSpecialistDto: CreateSpecialistDto) {
+    return this._specialistService.createSpecialist(createSpecialistDto)
+  }
 
   @HttpCode(201)
-  @Post('/create-rural-professional')
+  @Post('/rural-professional')
   public createRuralProfessional(@Body() createRuralProfessionalDto: CreateRuralProfessionalDto) {
     return this._ruralProfessionalService.createRuralProfessional(createRuralProfessionalDto)
   }
