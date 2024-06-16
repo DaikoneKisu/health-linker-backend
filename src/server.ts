@@ -5,6 +5,7 @@ import { AuthController } from '@/controllers/auth.controllers'
 import { AdminController } from '@/controllers/admin.controller'
 import { RuralProfessionalController } from './controllers/rural-professional.controller'
 import { SpeacialtyController } from './controllers/specialty.controller'
+import { SpecialistController } from './controllers/specialist.controller'
 
 const app = new App([
   CommonController,
@@ -12,7 +13,8 @@ const app = new App([
   AuthController,
   AdminController,
   RuralProfessionalController,
-  SpeacialtyController
+  SpeacialtyController,
+  SpecialistController
 ])
 
 app.listen()
