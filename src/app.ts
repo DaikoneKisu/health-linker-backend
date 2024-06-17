@@ -72,7 +72,11 @@ export class App {
       refPointerPrefix: '#/dtos'
     }) as { [schema: string]: SchemaObject }
     const spec = routingControllersToSpec(storage, undefined, {
-      components: { schemas: schemas },
+      components: {
+        schemas: schemas,
+        securitySchemes: { bearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' } }
+      },
+      security: [{ bearerAuth: [] }],
       info: {
         title: 'Health Linker Backend',
         version: '1.0.0',
