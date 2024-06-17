@@ -13,6 +13,7 @@ import { type ClassConstructor } from './types/class-constructor.type'
 import { routingControllersToSpec } from 'routing-controllers-openapi'
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema'
 import { SchemaObject } from 'openapi3-ts'
+import { AuthenticationMiddleware } from './middlewares/authentication.middleware'
 // import { ErrorMiddleware } from '@middlewares/error.middleware';
 
 export class App {
@@ -30,7 +31,8 @@ export class App {
     this.app = useExpressServer(this.app, {
       validation: true,
       classTransformer: true,
-      controllers
+      controllers,
+      middlewares: [AuthenticationMiddleware]
     })
     this.initializeStaticFiles()
     this.initializeSwagger()
