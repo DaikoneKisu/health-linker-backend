@@ -33,7 +33,7 @@ export class AuthenticationMiddleware implements ExpressMiddlewareInterface {
       return next()
     }
 
-    if (this._authService.verify(req.headers.authorization?.split(' ')[1])) {
+    if (this._authService.verify(req.headers.authorization)) {
       return next()
     }
 

@@ -76,7 +76,13 @@ export class AuthService {
     })
   }
 
-  public verify(token?: string): FindUser | undefined {
+  public verify(bearerToken?: string): FindUser | undefined {
+    if (bearerToken == null) {
+      return
+    }
+
+    const token = bearerToken.split(' ')[1]
+
     if (token == null) {
       return
     }
