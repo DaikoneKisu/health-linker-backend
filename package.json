@@ -11,10 +11,14 @@
     "lint": "(prettier --config .prettierrc --check . || pnpm format) && eslint .",
     "format": "prettier --config .prettierrc --cache --write .",
     "prepare": "husky",
-    "generate": "drizzle-kit generate --config=drizzle.config.ts",
-    "migrate": "drizzle-kit migrate --config=drizzle.config.ts",
-    "introspect": "drizzle-kit introspect --config=drizzle.config.ts",
-    "push": "drizzle-kit push --config=drizzle.config.ts"
+    "generate:dev": "cross-env NODE_ENV=development drizzle-kit generate --config=drizzle.config.ts",
+    "generate:prod": "cross-env NODE_ENV=production drizzle-kit generate --config=drizzle.config.ts",
+    "migrate:dev": "cross-env NODE_ENV=development drizzle-kit migrate --config=drizzle.config.ts",
+    "migrate:prod": "cross-env NODE_ENV=production drizzle-kit migrate --config=drizzle.config.ts",
+    "introspect:dev": "cross-env NODE_ENV=development drizzle-kit introspect --config=drizzle.config.ts",
+    "introspect:prod": "cross-env NODE_ENV=production drizzle-kit introspect --config=drizzle.config.ts",
+    "push:dev": "cross-env NODE_ENV=development drizzle-kit push --config=drizzle.config.ts",
+    "push:prod": "cross-env NODE_ENV=production drizzle-kit push --config=drizzle.config.ts"
   },
   "lint-staged": {
     "**/*": "prettier --config .prettierrc --cache --write --ignore-unknown"
