@@ -14,6 +14,8 @@ import { routingControllersToSpec } from 'routing-controllers-openapi'
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema'
 import { SchemaObject } from 'openapi3-ts'
 import { AuthenticationMiddleware } from './middlewares/authentication.middleware'
+import { AuthorizationChecker } from 'routing-controllers/types/AuthorizationChecker'
+import { CurrentUserChecker } from 'routing-controllers/types/CurrentUserChecker'
 // import { ErrorMiddleware } from '@middlewares/error.middleware';
 
 export class App {
@@ -21,7 +23,11 @@ export class App {
   public env: string
   public port: string | number
 
-  constructor(controllers: ClassConstructor<unknown>[]) {
+  constructor(
+    controllers: ClassConstructor<unknown>[],
+    authorizationChecker: AuthorizationChecker,
+    currentUserChecker: CurrentUserChecker
+  ) {
     this.app = express()
     this.env = NODE_ENV
     this.port = PORT
@@ -32,6 +38,8 @@ export class App {
       validation: true,
       classTransformer: true,
       controllers,
+      authorizationChecker,
+      currentUserChecker,
       middlewares: [AuthenticationMiddleware]
     })
     this.initializeStaticFiles()
