@@ -1,5 +1,6 @@
 import {
   Body,
+  CurrentUser,
   Delete,
   Get,
   HttpCode,
@@ -24,6 +25,7 @@ import { PaginationQuery } from '@/dtos/pagination-query.dto'
 import { CreateSpecialistDto } from '@/dtos/specialist.dto'
 import { CreateRuralProfessionalDto } from '@/dtos/rural-professional.dto'
 import { User } from '@/types/user.type'
+import { FindUser } from '@/types/find-user.type'
 
 //TODO: Make validations reject on not specified fields
 @JsonController('/users')
@@ -51,6 +53,12 @@ export class UserController {
   @Get('/all')
   public getAll() {
     return this._userService.getAllUsers()
+  }
+
+  @HttpCode(200)
+  @Get('/me')
+  public getMe(@CurrentUser() user: FindUser) {
+    return this._userService.getUser(user.document)
   }
 
   @HttpCode(200)
