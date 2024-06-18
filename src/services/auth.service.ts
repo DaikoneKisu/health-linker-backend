@@ -1,5 +1,5 @@
 import { NotFoundError, UnauthorizedError } from 'routing-controllers'
-import { sign } from 'jsonwebtoken'
+import { sign, verify } from 'jsonwebtoken'
 import { EncryptService } from '@services/encrypt.service'
 import { UserService } from '@services/user.service'
 import { RuralProfessionalService } from './rural-professional.service'
@@ -74,5 +74,23 @@ export class AuthService {
       notBefore: '0ms',
       algorithm: 'HS256'
     })
+  }
+
+  public verify(token?: string): FindUser | undefined {
+    if (token == null) {
+      return
+    }
+
+    const extractedToken = token?.startsWith('Bearer ') ? token.split(' ')[1] : token
+
+    if (extractedToken == null) {
+      return
+    }
+
+    try {
+      return verify(extractedToken, SECRET_KEY, { algorithms: ['HS256'] }) as FindUser
+    } catch (_e: unknown) {
+      return
+    }
   }
 }

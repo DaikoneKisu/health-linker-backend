@@ -13,6 +13,9 @@ import { type ClassConstructor } from './types/class-constructor.type'
 import { routingControllersToSpec } from 'routing-controllers-openapi'
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema'
 import { SchemaObject } from 'openapi3-ts'
+import { AuthenticationMiddleware } from './middlewares/authentication.middleware'
+import { AuthorizationChecker } from 'routing-controllers/types/AuthorizationChecker'
+import { CurrentUserChecker } from 'routing-controllers/types/CurrentUserChecker'
 // import { ErrorMiddleware } from '@middlewares/error.middleware';
 
 export class App {
@@ -20,7 +23,11 @@ export class App {
   public env: string
   public port: string | number
 
-  constructor(controllers: ClassConstructor<unknown>[]) {
+  constructor(
+    controllers: ClassConstructor<unknown>[],
+    authorizationChecker: AuthorizationChecker,
+    currentUserChecker: CurrentUserChecker
+  ) {
     this.app = express()
     this.env = NODE_ENV
     this.port = PORT
@@ -30,7 +37,10 @@ export class App {
     this.app = useExpressServer(this.app, {
       validation: true,
       classTransformer: true,
-      controllers
+      controllers,
+      authorizationChecker,
+      currentUserChecker,
+      middlewares: [AuthenticationMiddleware]
     })
     this.initializeStaticFiles()
     this.initializeSwagger()
@@ -70,7 +80,11 @@ export class App {
       refPointerPrefix: '#/dtos'
     }) as { [schema: string]: SchemaObject }
     const spec = routingControllersToSpec(storage, undefined, {
-      components: { schemas: schemas },
+      components: {
+        schemas: schemas,
+        securitySchemes: { bearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' } }
+      },
+      security: [{ bearerAuth: [] }],
       info: {
         title: 'Health Linker Backend',
         version: '1.0.0',
