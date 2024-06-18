@@ -76,19 +76,19 @@ export class AuthService {
     })
   }
 
-  public verify(bearerToken?: string): FindUser | undefined {
-    if (bearerToken == null) {
-      return
-    }
-
-    const token = bearerToken.split(' ')[1]
-
+  public verify(token?: string): FindUser | undefined {
     if (token == null) {
       return
     }
 
+    const extractedToken = token?.startsWith('Bearer ') ? token.split(' ')[1] : token
+
+    if (extractedToken == null) {
+      return
+    }
+
     try {
-      return verify(token, SECRET_KEY, { algorithms: ['HS256'] }) as FindUser
+      return verify(extractedToken, SECRET_KEY, { algorithms: ['HS256'] }) as FindUser
     } catch (_e: unknown) {
       return
     }
