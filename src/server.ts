@@ -4,7 +4,7 @@ import { UserController } from '@/controllers/user.controller'
 import { AuthController } from '@/controllers/auth.controllers'
 import { AdminController } from '@/controllers/admin.controller'
 import { RuralProfessionalController } from './controllers/rural-professional.controller'
-import { SpeacialtyController } from './controllers/specialty.controller'
+import { SpecialtyController } from './controllers/specialty.controller'
 import { SpecialistController } from './controllers/specialist.controller'
 import { ClinicalCaseController } from './controllers/clinical-case.controller'
 import { authorization } from './utils/authorization'
@@ -38,7 +38,7 @@ const app = new App(
     AuthController,
     AdminController,
     RuralProfessionalController,
-    SpeacialtyController,
+    SpecialtyController,
     SpecialistController,
     ClinicalCaseController
   ],
