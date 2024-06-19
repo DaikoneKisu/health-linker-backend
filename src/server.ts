@@ -6,6 +6,7 @@ import { AdminController } from '@/controllers/admin.controller'
 import { RuralProfessionalController } from './controllers/rural-professional.controller'
 import { SpeacialtyController } from './controllers/specialty.controller'
 import { SpecialistController } from './controllers/specialist.controller'
+import { ClinicalCaseController } from './controllers/clinical-case.controller'
 import { authorization } from './utils/authorization'
 import { currentUser } from './utils/current-user'
 import { AuthService } from '@/services/auth.service'
@@ -38,7 +39,8 @@ const app = new App(
     AdminController,
     RuralProfessionalController,
     SpeacialtyController,
-    SpecialistController
+    SpecialistController,
+    ClinicalCaseController
   ],
   authorization(userService, authService),
   currentUser(userService, authService)
