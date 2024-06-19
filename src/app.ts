@@ -16,6 +16,7 @@ import { SchemaObject } from 'openapi3-ts'
 import { AuthenticationMiddleware } from './middlewares/authentication.middleware'
 import { AuthorizationChecker } from 'routing-controllers/types/AuthorizationChecker'
 import { CurrentUserChecker } from 'routing-controllers/types/CurrentUserChecker'
+import { getMetadataStorage } from 'class-validator'
 // import { ErrorMiddleware } from '@middlewares/error.middleware';
 
 export class App {
@@ -77,6 +78,13 @@ export class App {
   private initializeSwagger() {
     const storage = getMetadataArgsStorage()
     const schemas = validationMetadatasToSchemas({
+      classValidatorMetadataStorage: getMetadataStorage(),
+      additionalConverters: {
+        DateBeforeNow: (meta) => {
+          //! This does not work, should change this dependency for another 'cuz this one is near to deprecation
+          return { description: meta.name, type: 'string' }
+        }
+      },
       refPointerPrefix: '#/dtos'
     }) as { [schema: string]: SchemaObject }
     const spec = routingControllersToSpec(storage, undefined, {
