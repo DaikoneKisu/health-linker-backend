@@ -18,7 +18,9 @@ jobs:
           script: |
             export PNPM="$PNPM:/usr/bin/pnpm"
             cd /var/www/healthlinker-backend-stage
+            git switch stage
             git pull
             pnpm install
-            pnpm run build
-            pm2 restart healthlinker-backend-stage
+            pnpm migrate:prod
+            pnpm build
+            pm2 restart healthlinker-backend-stage --update-env
