@@ -146,6 +146,58 @@ export class ClinicalCaseFeedbackRepository {
     return rows
   }
 
+  public async findByUserAndClinicalCase(
+    userDocument: string,
+    clinicalCaseId: number
+  ): Promise<FindClinicalCaseFeedback[]> {
+    const rows = await this._db
+      .select({
+        id: clinicalCaseFeedbackModel.id,
+        clinicalCaseId: clinicalCaseFeedbackModel.clinicalCaseId,
+        userDocument: clinicalCaseFeedbackModel.userDocument,
+        text: clinicalCaseFeedbackModel.text,
+        createdAt: clinicalCaseFeedbackModel.createdAt,
+        updatedAt: clinicalCaseFeedbackModel.updatedAt
+      })
+      .from(clinicalCaseFeedbackModel)
+      .where(
+        and(
+          eq(clinicalCaseFeedbackModel.userDocument, userDocument),
+          eq(clinicalCaseFeedbackModel.clinicalCaseId, clinicalCaseId)
+        )
+      )
+
+    return rows
+  }
+
+  public async findByUserAndClinicalCaseWithLimitAndOffset(
+    limit: number,
+    offset: number,
+    userDocument: string,
+    clinicalCaseId: number
+  ): Promise<FindClinicalCaseFeedback[]> {
+    const rows = await this._db
+      .select({
+        id: clinicalCaseFeedbackModel.id,
+        clinicalCaseId: clinicalCaseFeedbackModel.clinicalCaseId,
+        userDocument: clinicalCaseFeedbackModel.userDocument,
+        text: clinicalCaseFeedbackModel.text,
+        createdAt: clinicalCaseFeedbackModel.createdAt,
+        updatedAt: clinicalCaseFeedbackModel.updatedAt
+      })
+      .from(clinicalCaseFeedbackModel)
+      .where(
+        and(
+          eq(clinicalCaseFeedbackModel.userDocument, userDocument),
+          eq(clinicalCaseFeedbackModel.clinicalCaseId, clinicalCaseId)
+        )
+      )
+      .limit(limit)
+      .offset(limit * offset)
+
+    return rows
+  }
+
   public async create(
     newClinicalCaseFeedback: NewClinicalCaseFeedback
   ): Promise<FindClinicalCaseFeedback | undefined> {
