@@ -1,19 +1,10 @@
-import { IsNumber, IsOptional, IsPositive, IsString, Length, Matches } from 'class-validator'
+import { IsNumber, IsOptional, IsPositive, IsString, Length } from 'class-validator'
 import { UpdateClinicalCaseFeedback } from '@/types/clinical-case-feedback.type'
 
 export class CreateClinicalCaseFeedbackDto {
   @IsPositive()
   @IsNumber()
   public clinicalCaseId: number
-
-  @Length(10, 10, {
-    message: 'El documento debe tener exactamente 10 caracteres.'
-  })
-  @Matches(/^\d+$/, {
-    message: 'El documento debe contener solo números.'
-  })
-  @IsString()
-  public userDocument: string
 
   @Length(1, 500, {
     message:
@@ -22,9 +13,8 @@ export class CreateClinicalCaseFeedbackDto {
   @IsString()
   public text: string
 
-  constructor(clinicalCaseId: number, userDocument: string, text: string) {
+  constructor(clinicalCaseId: number, text: string) {
     this.clinicalCaseId = clinicalCaseId
-    this.userDocument = userDocument
     this.text = text
   }
 }
