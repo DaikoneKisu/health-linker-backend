@@ -85,6 +85,13 @@
       "when": 1718904231301,
       "tag": "0011_overconfident_green_goblin",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1718904569614,
+      "tag": "0012_giant_hex",
+      "breakpoints": true
     }
   ]
 }
