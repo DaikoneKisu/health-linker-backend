@@ -4,8 +4,10 @@ import { UserController } from '@/controllers/user.controller'
 import { AuthController } from '@/controllers/auth.controllers'
 import { AdminController } from '@/controllers/admin.controller'
 import { RuralProfessionalController } from './controllers/rural-professional.controller'
-import { SpeacialtyController } from './controllers/specialty.controller'
+import { SpecialtyController } from './controllers/specialty.controller'
 import { SpecialistController } from './controllers/specialist.controller'
+import { ClinicalCaseController } from './controllers/clinical-case.controller'
+import { SpecialistMentorsClinicalCaseController } from './controllers/specialist-mentors-clinical-case.controller'
 import { authorization } from './utils/authorization'
 import { currentUser } from './utils/current-user'
 import { AuthService } from '@/services/auth.service'
@@ -18,6 +20,7 @@ import { AdminRepository } from '@/repositories/admin.repository'
 import { SpecialtyRepository } from '@/repositories/specialty.repository'
 import { RuralProfessionalRepository } from '@/repositories/rural-professional.repository'
 import { SpecialistRepository } from '@/repositories/specialist.repository'
+import { ClinicalCaseFeedbackController } from './controllers/clinical-case-feedback.controller'
 
 const encryptService = new EncryptService()
 
@@ -37,8 +40,11 @@ const app = new App(
     AuthController,
     AdminController,
     RuralProfessionalController,
-    SpeacialtyController,
-    SpecialistController
+    SpecialtyController,
+    SpecialistController,
+    ClinicalCaseController,
+    SpecialistMentorsClinicalCaseController,
+    ClinicalCaseFeedbackController
   ],
   authorization(userService, authService),
   currentUser(userService, authService)

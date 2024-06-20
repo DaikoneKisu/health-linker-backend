@@ -1,0 +1,2 @@
+ALTER TABLE "specialists_mentor_clinical_cases" ADD COLUMN "created_at" timestamp (6) with time zone DEFAULT now() NOT NULL;--> statement-breakpoint
+ALTER TABLE "specialists_mentor_clinical_cases" ADD COLUMN "updated_at" timestamp (6) with time zone DEFAULT now() NOT NULL;

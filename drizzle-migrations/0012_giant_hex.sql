@@ -1,0 +1,1 @@
+ALTER TABLE "clinical_case_feedback" RENAME TO "clinical_cases_feedbacks";

@@ -57,6 +57,41 @@
       "when": 1718487174571,
       "tag": "0007_overconfident_hammerhead",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1718751186993,
+      "tag": "0008_yielding_jamie_braddock",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1718829893829,
+      "tag": "0009_giant_mongu",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1718829984792,
+      "tag": "0010_brown_rocket_racer",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "6",
+      "when": 1718904231301,
+      "tag": "0011_overconfident_green_goblin",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1718904569614,
+      "tag": "0012_giant_hex",
+      "breakpoints": true
     }
   ]
 }

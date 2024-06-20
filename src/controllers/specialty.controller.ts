@@ -14,7 +14,7 @@ import { PaginationQuery } from '@/dtos/pagination-query.dto'
 import { CreateSpecialtyDto, UpdateSpecialtyDto } from '@/dtos/specialty.dto'
 
 @JsonController('/specialties')
-export class SpeacialtyController {
+export class SpecialtyController {
   private readonly _specialtyRepository: SpecialtyRepository = new SpecialtyRepository()
 
   @HttpCode(200)
