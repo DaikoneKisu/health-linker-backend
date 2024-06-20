@@ -65,6 +65,22 @@ export class SpecialistMentorsClinicalCaseRepository {
       .where(eq(specialistMentorsClinicalCaseModel.specialistDocument, specialistDocument))
   }
 
+  public async findManyBySpecialistWithLimitAndOffset(
+    limit: number,
+    offset: number,
+    specialistDocument: SpecialistMentorsClinicalCase['specialistDocument']
+  ): Promise<FindSpecialistMentorsClinicalCase[] | undefined> {
+    return await this._db
+      .select({
+        clinicalCaseId: specialistMentorsClinicalCaseModel.clinicalCaseId,
+        specialistDocument: specialistMentorsClinicalCaseModel.specialistDocument
+      })
+      .from(specialistMentorsClinicalCaseModel)
+      .where(eq(specialistMentorsClinicalCaseModel.specialistDocument, specialistDocument))
+      .limit(limit)
+      .offset(limit * offset)
+  }
+
   public async create(
     newSpecialistMentorsClinicalCase: NewSpecialistMentorsClinicalCase
   ): Promise<FindSpecialistMentorsClinicalCase | undefined> {

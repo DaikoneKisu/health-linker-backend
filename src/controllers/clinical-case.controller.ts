@@ -1,4 +1,5 @@
 import {
+  BadRequestError,
   Body,
   CurrentUser,
   Delete,
@@ -6,6 +7,7 @@ import {
   HttpCode,
   JsonController,
   OnUndefined,
+  Param,
   Params,
   Patch,
   Post,
@@ -26,6 +28,13 @@ import { FindUser } from '@/types/find-user.type'
 import { PositiveNumericIdDto } from '@/dtos/common.dto'
 import { SpecialistService } from '@/services/specialist.service'
 import { SpecialistRepository } from '@/repositories/specialist.repository'
+import { SpecialistMentorsClinicalCaseService } from '@/services/specialist-mentors-clinical-case.service'
+import { SpecialistMentorsClinicalCaseRepository } from '@/repositories/specialist-mentors-clinical-case.repository'
+import { ClinicalCasesRecordService } from '@/services/clinical-cases-record.service'
+import { plainToClass } from 'class-transformer'
+import { CreateSpecialistMentorsClinicalCaseDto } from '@/dtos/specialist-mentors-clinical-case.dto'
+import { validateSync } from 'class-validator'
+import { UnprocessableContentError } from '@/exceptions/unprocessable-content-error'
 
 @JsonController('/clinical-cases')
 export class ClinicalCaseController {
@@ -42,6 +51,30 @@ export class ClinicalCaseController {
       new SpecialtyRepository()
     )
   )
+  private readonly _specialistMentorsClinicalCaseService: SpecialistMentorsClinicalCaseService =
+    new SpecialistMentorsClinicalCaseService(
+      new SpecialistMentorsClinicalCaseRepository(),
+      this._clinicalCaseService,
+      new SpecialistService(
+        new SpecialistRepository(),
+        new UserService(new UserRepository(), new EncryptService(), new AdminRepository()),
+        new SpecialtyRepository()
+      )
+    )
+  private readonly _clinicalCasesRecordService: ClinicalCasesRecordService =
+    new ClinicalCasesRecordService(
+      this._clinicalCaseService,
+      this._specialistMentorsClinicalCaseService,
+      new RuralProfessionalService(
+        new RuralProfessionalRepository(),
+        new UserService(new UserRepository(), new EncryptService(), new AdminRepository())
+      ),
+      new SpecialistService(
+        new SpecialistRepository(),
+        new UserService(new UserRepository(), new EncryptService(), new AdminRepository()),
+        new SpecialtyRepository()
+      )
+    )
 
   @HttpCode(200)
   @Get()
@@ -52,46 +85,110 @@ export class ClinicalCaseController {
     )
   }
 
+  // @HttpCode(200)
+  // @Get('/current-rural-professional')
+  // public getCurrentRuralProfessional(
+  //   @QueryParams() { page, size }: PaginationQuery,
+  //   @CurrentUser() { document }: FindUser
+  // ) {
+  //   return this._clinicalCaseService.getPaginatedRuralProfessionalClinicalCases(
+  //     page,
+  //     size,
+  //     document
+  //   )
+  // }
+
+  // @HttpCode(200)
+  // @Get('/current-rural-specialist')
+  // public getCurrentSpecialist(
+  //   @QueryParams() { page, size }: PaginationQuery,
+  //   @CurrentUser() { document }: FindUser
+  // ) {
+  //   return this._specialistMentorsClinicalCaseService.getPaginatedFindCases(page, size, document)
+  // }
+
   @HttpCode(200)
-  @Get('/current-rural-professional')
-  public getCurrentRuralProfessional(
+  @Get('/current-user')
+  public getCurrentUser(
     @QueryParams() { page, size }: PaginationQuery,
-    @CurrentUser() { document }: FindUser
+    @CurrentUser() user: FindUser
   ) {
-    return this._clinicalCaseService.getPaginatedRuralProfessionalClinicalCases(
-      page,
-      size,
-      document
+    if (user.userType === 'rural professional') {
+      return this._clinicalCaseService.getPaginatedRuralProfessionalClinicalCases(
+        page,
+        size,
+        user.document
+      )
+    }
+
+    if (user.userType === 'specialist') {
+      return this._specialistMentorsClinicalCaseService.getPaginatedFindCases(
+        page,
+        size,
+        user.document
+      )
+    }
+
+    throw new UnprocessableContentError(
+      'Solo los profesionales rurales y especialistas pueden acceder a sus casos clínicos.'
     )
   }
 
   @HttpCode(200)
-  @Get('/open/current-rural-professional')
-  public getOpenCurrentRuralProfessional(
+  @Get('/open/current-user')
+  public getOpenCurrentUser(
     @QueryParams() { page, size }: PaginationQuery,
-    @CurrentUser() { document }: FindUser
+    @CurrentUser() user: FindUser
   ) {
-    return this._clinicalCaseService.getPaginatedOpenOrClosedRuralProfessionalClinicalCases(
-      page,
-      size,
-      false,
-      document
+    if (user.userType === 'rural professional') {
+      return this._clinicalCaseService.getPaginatedOpenOrClosedRuralProfessionalClinicalCases(
+        page,
+        size,
+        false,
+        user.document
+      )
+    }
+
+    if (user.userType === 'specialist') {
+      return this._specialistMentorsClinicalCaseService.getOpenPaginatedFindCases(
+        page,
+        size,
+        user.document
+      )
+    }
+
+    throw new UnprocessableContentError(
+      'Solo los profesionales rurales y especialistas pueden acceder a sus casos clínicos.'
     )
   }
 
-  @HttpCode(200)
-  @Get('/closed/current-rural-professional')
-  public getClosedCurrentRuralProfessional(
-    @QueryParams() { page, size }: PaginationQuery,
-    @CurrentUser() { document }: FindUser
-  ) {
-    return this._clinicalCaseService.getPaginatedOpenOrClosedRuralProfessionalClinicalCases(
-      page,
-      size,
-      true,
-      document
-    )
-  }
+  // @HttpCode(200)
+  // @Get('/open/current-rural-professional')
+  // public getOpenCurrentRuralProfessional(
+  //   @QueryParams() { page, size }: PaginationQuery,
+  //   @CurrentUser() { document }: FindUser
+  // ) {
+  //   return this._clinicalCaseService.getPaginatedOpenOrClosedRuralProfessionalClinicalCases(
+  //     page,
+  //     size,
+  //     false,
+  //     document
+  //   )
+  // }
+
+  // @HttpCode(200)
+  // @Get('/closed/current-rural-professional')
+  // public getClosedCurrentRuralProfessional(
+  //   @QueryParams() { page, size }: PaginationQuery,
+  //   @CurrentUser() { document }: FindUser
+  // ) {
+  //   return this._clinicalCaseService.getPaginatedOpenOrClosedRuralProfessionalClinicalCases(
+  //     page,
+  //     size,
+  //     true,
+  //     document
+  //   )
+  // }
 
   @HttpCode(200)
   @Get('/open/required-current-specialist')
@@ -108,11 +205,17 @@ export class ClinicalCaseController {
 
   @HttpCode(200)
   @Get('/closed/current-user-record')
-  public getCurrentUserRecord(
+  public getPaginatedCurrentUserRecord(
     @QueryParams() { page, size }: PaginationQuery,
     @CurrentUser() user: FindUser
   ) {
-    return this._clinicalCaseService.getPaginatedRecordClinicalCases(page, size, user)
+    return this._clinicalCasesRecordService.getPaginatedRecord(page, size, user)
+  }
+
+  @HttpCode(200)
+  @Get('/all/closed/current-user-record')
+  public getCurrentUserRecord(@CurrentUser() user: FindUser) {
+    return this._clinicalCasesRecordService.getRecord(user)
   }
 
   @HttpCode(200)
@@ -135,6 +238,25 @@ export class ClinicalCaseController {
     @CurrentUser() { document }: FindUser
   ) {
     return this._clinicalCaseService.createClinicalCase(createClinicalCaseDto, document)
+  }
+
+  @HttpCode(201)
+  @Post('/mentor/:clinicalCaseId')
+  public createCurrentUserAsMentorIfSpecialist(
+    @Param('clinicalCaseId') clinicalCaseId: number,
+    @CurrentUser() { document }: FindUser
+  ) {
+    const createSpecialistMentorsClinicalCase = plainToClass(
+      CreateSpecialistMentorsClinicalCaseDto,
+      { clinicalCaseId, specialistDocument: document }
+    )
+
+    //TODO: refactor this so the bad request error is more descriptive
+    if (validateSync(createSpecialistMentorsClinicalCase).length > 0) {
+      throw new BadRequestError('Los datos proveídos no son válidos.')
+    }
+
+    return this._specialistMentorsClinicalCaseService.create(createSpecialistMentorsClinicalCase)
   }
 
   @HttpCode(200)

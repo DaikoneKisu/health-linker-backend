@@ -8,7 +8,7 @@ import {
 import { ClinicalCaseService } from './clinical-case.service'
 import { SpecialistService } from './specialist.service'
 import { UnprocessableContentError } from '@/exceptions/unprocessable-content-error'
-import { ClinicalCase } from '@/types/clinical-case.type'
+import { ClinicalCase, FindClinicalCase } from '@/types/clinical-case.type'
 import { Specialist } from '@/types/specialist.type'
 
 export class SpecialistMentorsClinicalCaseService {
@@ -64,6 +64,145 @@ export class SpecialistMentorsClinicalCaseService {
     )
   }
 
+  public async getPaginatedCases(
+    page: number = 1,
+    size: number = 10,
+    specialistDocument: Specialist['document']
+  ) {
+    const specialist = await this._specialistService.getSpecialist(specialistDocument)
+
+    if (!specialist) {
+      throw new UnprocessableContentError('El especialista proveído no existe.')
+    }
+
+    return await this._specialistMentorsClinicalCaseRepository.findManyBySpecialistWithLimitAndOffset(
+      size,
+      page - 1,
+      specialist.document
+    )
+  }
+
+  public async getPaginatedFindCases(
+    page: number = 1,
+    size: number = 10,
+    specialistDocument: Specialist['document']
+  ) {
+    const specialist = await this._specialistService.getSpecialist(specialistDocument)
+
+    if (!specialist) {
+      throw new UnprocessableContentError('El especialista proveído no existe.')
+    }
+
+    const mentoredCases =
+      await this._specialistMentorsClinicalCaseRepository.findManyBySpecialistWithLimitAndOffset(
+        size,
+        page - 1,
+        specialist.document
+      )
+
+    if (!mentoredCases) {
+      return []
+    }
+
+    const clinicalCases: FindClinicalCase[] = []
+
+    for (const mentoredCase of mentoredCases) {
+      const clinicalCase = await this._clinicalCaseService.getClinicalCase(
+        mentoredCase.clinicalCaseId
+      )
+
+      if (!clinicalCase) {
+        continue
+      }
+
+      clinicalCases.push(clinicalCase)
+    }
+
+    return clinicalCases
+  }
+
+  public async getOpenPaginatedFindCases(
+    page: number = 1,
+    size: number = 10,
+    specialistDocument: Specialist['document']
+  ) {
+    const specialist = await this._specialistService.getSpecialist(specialistDocument)
+
+    if (!specialist) {
+      throw new UnprocessableContentError('El especialista proveído no existe.')
+    }
+
+    const clinicalCases = await this._clinicalCaseService.getAllClinicalCases()
+
+    const mentoredCases =
+      await this._specialistMentorsClinicalCaseRepository.findManyBySpecialistWithLimitAndOffset(
+        size,
+        page - 1,
+        specialist.document
+      )
+
+    if (!mentoredCases || mentoredCases?.length === 0) {
+      return []
+    }
+
+    const openMentoredFindClinicalCases: FindClinicalCase[] = []
+
+    for (const clinicalCase of clinicalCases) {
+      for (const mentoredCase of mentoredCases) {
+        if (
+          clinicalCase.id === mentoredCase.clinicalCaseId &&
+          mentoredCase.specialistDocument === specialist.document &&
+          !clinicalCase.isClosed
+        ) {
+          openMentoredFindClinicalCases.push(clinicalCase)
+        }
+      }
+    }
+
+    return openMentoredFindClinicalCases
+  }
+
+  public async getClosedPaginatedFindCases(
+    page: number = 1,
+    size: number = 10,
+    specialistDocument: Specialist['document']
+  ) {
+    const specialist = await this._specialistService.getSpecialist(specialistDocument)
+
+    if (!specialist) {
+      throw new UnprocessableContentError('El especialista proveído no existe.')
+    }
+
+    const clinicalCases = await this._clinicalCaseService.getAllClinicalCases()
+
+    const mentoredCases =
+      await this._specialistMentorsClinicalCaseRepository.findManyBySpecialistWithLimitAndOffset(
+        size,
+        page - 1,
+        specialist.document
+      )
+
+    if (!mentoredCases || mentoredCases?.length === 0) {
+      return []
+    }
+
+    const closedMentoredFindClinicalCases: FindClinicalCase[] = []
+
+    for (const clinicalCase of clinicalCases) {
+      for (const mentoredCase of mentoredCases) {
+        if (
+          clinicalCase.id === mentoredCase.clinicalCaseId &&
+          mentoredCase.specialistDocument === specialist.document &&
+          clinicalCase.isClosed
+        ) {
+          closedMentoredFindClinicalCases.push(clinicalCase)
+        }
+      }
+    }
+
+    return closedMentoredFindClinicalCases
+  }
+
   public async create(
     createSpecialistMentorsClinicalCase: CreateSpecialistMentorsClinicalCaseDto
   ): Promise<FindSpecialistMentorsClinicalCase | undefined> {
@@ -92,6 +231,17 @@ export class SpecialistMentorsClinicalCaseService {
     const newSpecialistMentorsClinicalCase: NewSpecialistMentorsClinicalCase = {
       clinicalCaseId: createSpecialistMentorsClinicalCase.clinicalCaseId,
       specialistDocument: createSpecialistMentorsClinicalCase.specialistDocument
+    }
+
+    const specialistMentorsClinicalCase = await this._specialistMentorsClinicalCaseRepository.find(
+      newSpecialistMentorsClinicalCase.clinicalCaseId,
+      newSpecialistMentorsClinicalCase.specialistDocument
+    )
+
+    if (specialistMentorsClinicalCase) {
+      throw new UnprocessableContentError(
+        'El especialista proveído ya es mentor del caso clínico proveído.'
+      )
     }
 
     return await this._specialistMentorsClinicalCaseRepository.create(

@@ -74,6 +74,35 @@ export class ClinicalCaseRepository {
     return rows.at(0)
   }
 
+  public async findByIsClosedAndRuralProfessional(
+    isClosed: ClinicalCase['isClosed'],
+    ruralProfessionalDocument: RuralProfessional['document']
+  ): Promise<FindClinicalCase[] | undefined> {
+    const rows = await this._db
+      .select({
+        id: clinicalCaseModel.id,
+        description: clinicalCaseModel.description,
+        reason: clinicalCaseModel.reason,
+        isPublic: clinicalCaseModel.isPublic,
+        isClosed: clinicalCaseModel.isClosed,
+        patientBirthdate: clinicalCaseModel.patientBirthdate,
+        patientGender: clinicalCaseModel.patientGender,
+        patientReason: clinicalCaseModel.patientReason,
+        patientAssessment: clinicalCaseModel.patientAssessment,
+        requiredSpecialtyId: clinicalCaseModel.requiredSpecialtyId,
+        ruralProfessionalDocument: clinicalCaseModel.ruralProfessionalDocument
+      })
+      .from(clinicalCaseModel)
+      .where(
+        and(
+          eq(clinicalCaseModel.isClosed, isClosed),
+          eq(clinicalCaseModel.ruralProfessionalDocument, ruralProfessionalDocument)
+        )
+      )
+
+    return rows
+  }
+
   public async findByIsClosedAndRuralProfessionalWithLimitAndOffset(
     limit: number,
     offset: number,

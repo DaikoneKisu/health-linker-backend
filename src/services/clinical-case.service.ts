@@ -37,6 +37,23 @@ export class ClinicalCaseService {
     return await this._clinicalCaseRepository.find(id)
   }
 
+  public async getOpenOrClosedRuralProfessionalClinicalCases(
+    closed: ClinicalCase['isClosed'],
+    ruralProfessionalDocument: RuralProfessional['document']
+  ) {
+    const ruralProfessional =
+      await this._ruralProfessionalService.getRuralProfessional(ruralProfessionalDocument)
+
+    if (!ruralProfessional) {
+      throw new UnprocessableContentError('El usuario proveído no es un profesional rural.')
+    }
+
+    return await this._clinicalCaseRepository.findByIsClosedAndRuralProfessional(
+      closed,
+      ruralProfessional.document
+    )
+  }
+
   public async getPaginatedClinicalCases(page: number = 1, size: number = 10) {
     return await this._clinicalCaseRepository.findWithLimitAndOffset(size, page - 1)
   }
