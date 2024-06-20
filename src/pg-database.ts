@@ -15,7 +15,7 @@ const pool = new Pool({
   user: DATABASE_USER,
   password: DATABASE_PASSWORD,
   database: DATABASE_NAME,
-  ssl: true
+  ssl: DATABASE_URL === 'localhost' ? false : true
 })
 
 export const pgDatabase: PgDatabase = drizzle(pool)

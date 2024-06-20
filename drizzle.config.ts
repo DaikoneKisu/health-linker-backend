@@ -12,7 +12,7 @@ export default defineConfig({
     user: process.env.DATABASE_USER!,
     password: process.env.DATABASE_PASSWORD!,
     database: process.env.DATABASE_NAME!,
-    ssl: true
+    ssl: process.env.DATABASE_URL! === 'localhost' ? false : true
   },
   verbose: true,
   strict: true,
