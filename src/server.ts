@@ -20,6 +20,7 @@ import { AdminRepository } from '@/repositories/admin.repository'
 import { SpecialtyRepository } from '@/repositories/specialty.repository'
 import { RuralProfessionalRepository } from '@/repositories/rural-professional.repository'
 import { SpecialistRepository } from '@/repositories/specialist.repository'
+import { ClinicalCaseFeedbackController } from './controllers/clinical-case-feedback.controller'
 
 const encryptService = new EncryptService()
 
@@ -42,7 +43,8 @@ const app = new App(
     SpecialtyController,
     SpecialistController,
     ClinicalCaseController,
-    SpecialistMentorsClinicalCaseController
+    SpecialistMentorsClinicalCaseController,
+    ClinicalCaseFeedbackController
   ],
   authorization(userService, authService),
   currentUser(userService, authService)
