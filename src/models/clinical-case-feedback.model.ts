@@ -3,7 +3,7 @@ import { clinicalCaseModel } from './clinical-case.model'
 import { userModel } from './user.model'
 
 export const clinicalCaseFeedbackModel = pgTable(
-  'clinical_case_feedback',
+  'clinical_cases_feedbacks',
   {
     id: integer('id').notNull(),
     clinicalCaseId: integer('clinical_case_id')
