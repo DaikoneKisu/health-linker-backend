@@ -88,8 +88,8 @@ export class ClinicalCasesRecordService {
       }
 
       return await this._clinicalCaseService.getPaginatedOpenOrClosedRuralProfessionalClinicalCases(
-        size,
         page,
+        size,
         true,
         ruralProfessional.document
       )
