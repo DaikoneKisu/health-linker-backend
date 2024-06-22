@@ -18,6 +18,7 @@ export const {
   DATABASE_PASSWORD,
   BCRYPT_SALT_ROUNDS,
   EXPIRES_IN,
+  PUBLIC_PATH,
   isDev,
   isTest,
   isProd
