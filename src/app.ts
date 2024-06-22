@@ -7,7 +7,16 @@ import express from 'express'
 import helmet from 'helmet'
 import morgan from 'morgan'
 import { serve, setup } from 'swagger-ui-express'
-import { NODE_ENV, PORT, ORIGIN, LOG_FORMAT, CREDENTIALS, PUBLIC_DIR, isProd } from '@/config/env'
+import {
+  NODE_ENV,
+  PORT,
+  ORIGIN,
+  LOG_FORMAT,
+  CREDENTIALS,
+  PUBLIC_DIR,
+  PUBLIC_PATH,
+  isProd
+} from '@/config/env'
 import { getMetadataArgsStorage, useExpressServer } from 'routing-controllers'
 import { type ClassConstructor } from './types/class-constructor.type'
 import { routingControllersToSpec } from 'routing-controllers-openapi'
@@ -72,7 +81,7 @@ export class App {
   }
 
   private initializeStaticFiles() {
-    this.app.use('/public', express.static(path.join(__dirname, '../', PUBLIC_DIR)))
+    this.app.use(PUBLIC_PATH, express.static(path.join(__dirname, '../', PUBLIC_DIR)))
   }
 
   private initializeSwagger() {
