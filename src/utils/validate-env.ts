@@ -18,6 +18,7 @@ export const validateEnv = () => {
     DATABASE_PASSWORD: str(),
     BCRYPT_SALT_ROUNDS: nat(),
     EXPIRES_IN: nat(),
-    PUBLIC_PATH: str()
+    PUBLIC_PATH: str(),
+    MAX_FILESIZE: nat()
   })
 }

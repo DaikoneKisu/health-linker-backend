@@ -19,6 +19,7 @@ export const {
   BCRYPT_SALT_ROUNDS,
   EXPIRES_IN,
   PUBLIC_PATH,
+  MAX_FILESIZE,
   isDev,
   isTest,
   isProd
