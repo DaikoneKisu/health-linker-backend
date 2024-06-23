@@ -20,6 +20,7 @@ export const {
   EXPIRES_IN,
   PUBLIC_PATH,
   MAX_FILESIZE,
+  DOMAIN,
   isDev,
   isTest,
   isProd
