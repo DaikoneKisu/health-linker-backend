@@ -81,7 +81,7 @@ export class App {
   }
 
   private initializeStaticFiles() {
-    this.app.use(PUBLIC_PATH, express.static(path.join(__dirname, '../', PUBLIC_DIR)))
+    this.app.use(`/${PUBLIC_PATH}`, express.static(path.join(__dirname, '../', PUBLIC_DIR)))
   }
 
   private initializeSwagger() {
