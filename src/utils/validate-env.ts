@@ -1,4 +1,4 @@
-import { bool, cleanEnv, port, str } from 'envalid'
+import { bool, cleanEnv, port, str, url } from 'envalid'
 import { nat } from '@utils/nat'
 
 export const validateEnv = () => {
@@ -17,6 +17,9 @@ export const validateEnv = () => {
     DATABASE_USER: str(),
     DATABASE_PASSWORD: str(),
     BCRYPT_SALT_ROUNDS: nat(),
-    EXPIRES_IN: nat()
+    EXPIRES_IN: nat(),
+    PUBLIC_PATH: str(),
+    MAX_FILESIZE: nat(),
+    DOMAIN: url()
   })
 }
