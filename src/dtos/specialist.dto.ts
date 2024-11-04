@@ -11,10 +11,11 @@ export class CreateSpecialistDto extends CreateUserDto implements NewSpecialist 
     document: string,
     email: string,
     fullName: string,
+    phoneNumber: string,
     password: string,
     specialtyId: number
   ) {
-    super(document, email, fullName, password)
+    super(document, email, fullName, phoneNumber, password)
     this.specialtyId = specialtyId
   }
 }
