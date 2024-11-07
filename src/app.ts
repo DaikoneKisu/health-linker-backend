@@ -81,6 +81,10 @@ export class App {
   }
 
   private initializeStaticFiles() {
+    this.app.use(`/${PUBLIC_PATH}`, (_, res, next) => {
+      res.set('Cross-Origin-Resource-Policy', 'cross-origin')
+      next()
+    })
     this.app.use(`/${PUBLIC_PATH}`, express.static(path.join(__dirname, '../', PUBLIC_DIR)))
   }
 
