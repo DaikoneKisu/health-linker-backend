@@ -1,4 +1,4 @@
-import { eq, and, isNull } from 'drizzle-orm'
+import { eq, and } from 'drizzle-orm'
 import { PgDatabase } from '@/types/pg-database.type'
 import { pgDatabase } from '@/pg-database'
 import { clinicalCaseModel } from '@/models/clinical-case.model'
@@ -127,8 +127,7 @@ export class ClinicalCaseRepository {
       .where(
         and(
           eq(clinicalCaseModel.isClosed, isClosed),
-          eq(clinicalCaseModel.ruralProfessionalDocument, ruralProfessionalDocument),
-          isNull(clinicalCaseModel.errasedAt)
+          eq(clinicalCaseModel.ruralProfessionalDocument, ruralProfessionalDocument)
         )
       )
       .limit(limit)

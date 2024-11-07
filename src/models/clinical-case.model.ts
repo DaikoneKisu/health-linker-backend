@@ -37,6 +37,5 @@ export const clinicalCaseModel = pgTable('clinical_cases', {
   updatedAt: timestamp('updated_at', { withTimezone: true, precision: 6 })
     .notNull()
     .$onUpdate(() => new Date())
-    .defaultNow(),
-  errasedAt: timestamp('errased_at', { withTimezone: true, precision: 6 })
+    .defaultNow()
 })
