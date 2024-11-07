@@ -20,6 +20,7 @@ export class UserRepository {
         document: userModel.document,
         email: userModel.email,
         fullName: userModel.fullName,
+        phoneNumber: userModel.phoneNumber,
         isVerified: userModel.isVerified,
         userType: userModel.userType
       })
@@ -32,6 +33,7 @@ export class UserRepository {
         document: userModel.document,
         email: userModel.email,
         fullName: userModel.fullName,
+        phoneNumber: userModel.phoneNumber,
         isVerified: userModel.isVerified,
         userType: userModel.userType
       })
@@ -48,6 +50,7 @@ export class UserRepository {
         document: userModel.document,
         email: userModel.email,
         fullName: userModel.fullName,
+        phoneNumber: userModel.phoneNumber,
         isVerified: userModel.isVerified,
         userType: userModel.userType
       })
@@ -63,6 +66,7 @@ export class UserRepository {
         document: userModel.document,
         email: userModel.email,
         fullName: userModel.fullName,
+        phoneNumber: userModel.phoneNumber,
         isVerified: userModel.isVerified,
         userType: userModel.userType
       })
@@ -88,6 +92,7 @@ export class UserRepository {
       document: userModel.document,
       email: userModel.email,
       fullName: userModel.fullName,
+      phoneNumber: userModel.phoneNumber,
       isVerified: userModel.isVerified,
       userType: userModel.userType
     })
@@ -107,6 +112,7 @@ export class UserRepository {
         document: userModel.document,
         email: userModel.email,
         fullName: userModel.fullName,
+        phoneNumber: userModel.phoneNumber,
         isVerified: userModel.isVerified,
         userType: userModel.userType
       })
@@ -124,6 +130,7 @@ export class UserRepository {
         document: userModel.document,
         email: userModel.email,
         fullName: userModel.fullName,
+        phoneNumber: userModel.phoneNumber,
         isVerified: userModel.isVerified,
         userType: userModel.userType
       })
