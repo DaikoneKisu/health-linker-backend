@@ -1,1 +1,0 @@
-ALTER TABLE "clinical_cases" ADD COLUMN "fecha_borrado" timestamp (6) with time zone;
