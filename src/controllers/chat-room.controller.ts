@@ -40,6 +40,12 @@ export class ChatRoomController {
     return this._chatRoomService.getPaginatedChatRooms(paginationQuery.page, paginationQuery.size)
   }
 
+  @HttpCode(200)
+  @Get('/:id')
+  public getSingle(@Params() { id }: PositiveNumericIdDto) {
+    return this._chatRoomService.getSingleChatRoom(id)
+  }
+
   @HttpCode(201)
   @Post()
   public create(

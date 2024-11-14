@@ -22,6 +22,10 @@ export class ChatRoomService {
     return await this._chatRoomRepository.findWithLimitAndOffset(size, page - 1)
   }
 
+  public async getSingleChatRoom(id: ChatRoom['id']) {
+    return await this._chatRoomRepository.findById(id)
+  }
+
   public async createChatRoom(
     createChatRoomDto: CreateChatRoomDto,
     creatorDocument: Specialist['document']
@@ -35,7 +39,7 @@ export class ChatRoomService {
 
     return await this._chatRoomRepository.create({
       roomName: createChatRoomDto.roomName,
-      ownerDocument: createChatRoomDto.ownerDocument
+      ownerDocument: creatorDocument
     })
   }
 

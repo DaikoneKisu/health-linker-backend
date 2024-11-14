@@ -27,15 +27,15 @@ import { AuthorizationChecker } from 'routing-controllers/types/AuthorizationChe
 import { CurrentUserChecker } from 'routing-controllers/types/CurrentUserChecker'
 import { getMetadataStorage } from 'class-validator'
 // import { ErrorMiddleware } from '@middlewares/error.middleware';
-import { Server as SocketServer } from 'socket.io'
 import { createServer, Server as NodeServer } from 'node:http'
+import { SocketProvider } from './socketProvider'
 
 export class App {
   public app: express.Application
   public env: string
   public port: string | number
   public server: NodeServer
-  public io: SocketServer
+  public socketProvider: SocketProvider
 
   constructor(
     controllers: ClassConstructor<unknown>[],
@@ -45,12 +45,6 @@ export class App {
     this.app = express()
     this.env = NODE_ENV
     this.port = PORT
-
-    // For the chat server
-    this.server = createServer(this.app)
-    this.io = new SocketServer(this.server, {
-      serveClient: false
-    })
 
     this.initializePreviousMiddlewares()
 
@@ -63,11 +57,14 @@ export class App {
       middlewares: [AuthenticationMiddleware]
     })
     this.initializeStaticFiles()
-    this.initializeWebSocket()
     this.initializeSwagger()
 
     this.initializeAfterMiddlewares()
     // this.initializeErrorHandling();
+
+    // For the chat server
+    this.server = createServer(this.app)
+    this.socketProvider = new SocketProvider(this.server)
   }
 
   public listen() {
@@ -125,19 +122,6 @@ export class App {
     })
 
     this.app.use('/docs', serve, setup(spec))
-  }
-
-  /**
-   * Adds event listeners to websocket server for chats
-   */
-  private initializeWebSocket() {
-    this.io.on('connection', (socket) => {
-      console.log('Hola mundo')
-
-      socket.on('disconnect', () => {
-        console.log('Adios mundo')
-      })
-    })
   }
 
   // private initializeErrorHandling() {
