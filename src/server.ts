@@ -22,6 +22,8 @@ import { RuralProfessionalRepository } from '@/repositories/rural-professional.r
 import { SpecialistRepository } from '@/repositories/specialist.repository'
 import { ClinicalCaseFeedbackController } from './controllers/clinical-case-feedback.controller'
 import { ClinicalCaseFileController } from './controllers/clinical-case-file.controller'
+import { ChatRoomController } from './controllers/chat-room.controller'
+import { ChatMessageController } from './controllers/chat-message.controller'
 
 const encryptService = new EncryptService()
 
@@ -34,7 +36,7 @@ const authService: AuthService = new AuthService(
   new SpecialistService(new SpecialistRepository(), userService, new SpecialtyRepository())
 )
 
-const app = new App(
+export const app = new App(
   [
     CommonController,
     UserController,
@@ -46,7 +48,9 @@ const app = new App(
     ClinicalCaseController,
     SpecialistMentorsClinicalCaseController,
     ClinicalCaseFeedbackController,
-    ClinicalCaseFileController
+    ClinicalCaseFileController,
+    ChatRoomController,
+    ChatMessageController
   ],
   authorization(userService, authService),
   currentUser(userService, authService)
