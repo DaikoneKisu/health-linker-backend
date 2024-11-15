@@ -1,4 +1,4 @@
-import { eq, and, isNull } from 'drizzle-orm'
+import { eq, and, isNull, sql } from 'drizzle-orm'
 import { PgDatabase } from '@/types/pg-database.type'
 import { pgDatabase } from '@/pg-database'
 import { clinicalCaseModel } from '@/models/clinical-case.model'
@@ -121,7 +121,11 @@ export class ClinicalCaseRepository {
         patientReason: clinicalCaseModel.patientReason,
         patientAssessment: clinicalCaseModel.patientAssessment,
         requiredSpecialtyId: clinicalCaseModel.requiredSpecialtyId,
-        ruralProfessionalDocument: clinicalCaseModel.ruralProfessionalDocument
+        ruralProfessionalDocument: clinicalCaseModel.ruralProfessionalDocument,
+        editable:
+          sql`CASE WHEN (NOW() - ${clinicalCaseModel.createdAt}) < INTERVAL '30 minutes' THEN true ELSE false END`.as(
+            'editable'
+          )
       })
       .from(clinicalCaseModel)
       .where(

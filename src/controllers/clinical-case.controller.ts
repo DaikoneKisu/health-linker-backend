@@ -284,6 +284,10 @@ export class ClinicalCaseController {
     @Params() { id }: PositiveNumericIdDto,
     @CurrentUser() { document }: FindUser
   ) {
+    console.log('Endpoint update hit')
+    console.log('ID:', id)
+    console.log('Update DTO:', updateClinicalCaseDto)
+    console.log('User Document:', document)
     return this._clinicalCaseService.updateClinicalCase(id, updateClinicalCaseDto, document)
   }
 
