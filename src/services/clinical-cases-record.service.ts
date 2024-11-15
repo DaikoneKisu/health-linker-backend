@@ -77,7 +77,7 @@ export class ClinicalCasesRecordService {
     )
   }
 
-  public async getPaginatedRecord(page: number = 1, size: number = 10, user: FindUser) {
+  public async getPaginatedRecord(page: number = 1, size: number = 10, user: FindUser, query = '') {
     if (user.userType === 'rural professional') {
       const ruralProfessional = await this._ruralProfessionalService.getRuralProfessional(
         user.document
@@ -91,7 +91,8 @@ export class ClinicalCasesRecordService {
         page,
         size,
         true,
-        ruralProfessional.document
+        ruralProfessional.document,
+        query
       )
     }
 
