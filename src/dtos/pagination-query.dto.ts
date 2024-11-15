@@ -1,16 +1,16 @@
 import { IsOptional, IsPositive } from 'class-validator'
 
 export class PaginationQuery {
-  @IsOptional()
   @IsPositive({
     message: `El parámetro 'page' debe ser un número positivo mayor que cero.`
   })
+  @IsOptional()
   public page?: number
 
-  @IsOptional()
   @IsPositive({
     message: `El parámetro 'size' debe ser un número positivo mayor que cero.`
   })
+  @IsOptional()
   public size?: number
 
   constructor(page?: number, size?: number) {

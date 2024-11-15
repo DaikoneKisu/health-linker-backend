@@ -29,8 +29,8 @@ export class ClinicalCaseService {
     this._specialistService = specialistService
   }
 
-  public async getAllClinicalCases() {
-    return await this._clinicalCaseRepository.findAll()
+  public async getAllClinicalCases(query = '') {
+    return await this._clinicalCaseRepository.findAll(query)
   }
 
   public async getClinicalCase(id: ClinicalCase['id']) {
@@ -76,7 +76,8 @@ export class ClinicalCaseService {
         size,
         page - 1,
         true,
-        ruralProfessional.document
+        ruralProfessional.document,
+        ''
       )
     }
 
@@ -116,7 +117,8 @@ export class ClinicalCaseService {
     page: number = 1,
     size: number = 10,
     closed: ClinicalCase['isClosed'],
-    ruralProfessionalDocument: RuralProfessional['document']
+    ruralProfessionalDocument: RuralProfessional['document'],
+    query = ''
   ) {
     const ruralProfessional =
       await this._ruralProfessionalService.getRuralProfessional(ruralProfessionalDocument)
@@ -129,14 +131,16 @@ export class ClinicalCaseService {
       size,
       page - 1,
       closed,
-      ruralProfessional.document
+      ruralProfessional.document,
+      query
     )
   }
 
   public async getPaginatedRequiredSpecialistClinicalCases(
     page: number = 1,
     size: number = 10,
-    specialistDocument: Specialist['document']
+    specialistDocument: Specialist['document'],
+    query = ''
   ) {
     const specialist = await this._specialistService.getSpecialist(specialistDocument)
 
@@ -148,7 +152,8 @@ export class ClinicalCaseService {
       size,
       page - 1,
       false,
-      specialist.specialtyId
+      specialist.specialtyId,
+      query
     )
   }
 

@@ -35,6 +35,7 @@ import { plainToClass } from 'class-transformer'
 import { CreateSpecialistMentorsClinicalCaseDto } from '@/dtos/specialist-mentors-clinical-case.dto'
 import { validateSync } from 'class-validator'
 import { UnprocessableContentError } from '@/exceptions/unprocessable-content-error'
+import { ClinicalCaseSearchDto } from '@/dtos/clinical-case-search.dto'
 
 @JsonController('/clinical-cases')
 export class ClinicalCaseController {
@@ -137,7 +138,7 @@ export class ClinicalCaseController {
   @HttpCode(200)
   @Get('/open/current-user')
   public getOpenCurrentUser(
-    @QueryParams() { page, size }: PaginationQuery,
+    @QueryParams() { page, size, query }: ClinicalCaseSearchDto,
     @CurrentUser() user: FindUser
   ) {
     if (user.userType === 'rural professional') {
@@ -145,7 +146,8 @@ export class ClinicalCaseController {
         page,
         size,
         false,
-        user.document
+        user.document,
+        query
       )
     }
 
@@ -153,7 +155,8 @@ export class ClinicalCaseController {
       return this._specialistMentorsClinicalCaseService.getOpenPaginatedFindCases(
         page,
         size,
-        user.document
+        user.document,
+        query
       )
     }
 
@@ -193,23 +196,24 @@ export class ClinicalCaseController {
   @HttpCode(200)
   @Get('/open/required-current-specialist')
   public async getRequiredCurrentSpecialist(
-    @QueryParams() { page, size }: PaginationQuery,
+    @QueryParams() { page, size, query }: ClinicalCaseSearchDto,
     @CurrentUser() { document }: FindUser
   ) {
     return this._clinicalCaseService.getPaginatedRequiredSpecialistClinicalCases(
       page,
       size,
-      document
+      document,
+      query
     )
   }
 
   @HttpCode(200)
   @Get('/closed/current-user-record')
   public getPaginatedCurrentUserRecord(
-    @QueryParams() { page, size }: PaginationQuery,
+    @QueryParams() { page, size, query }: ClinicalCaseSearchDto,
     @CurrentUser() user: FindUser
   ) {
-    return this._clinicalCasesRecordService.getPaginatedRecord(page, size, user)
+    return this._clinicalCasesRecordService.getPaginatedRecord(page, size, user, query)
   }
 
   @HttpCode(200)
