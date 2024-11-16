@@ -18,12 +18,17 @@ import { EncryptService } from '@/services/encrypt.service'
 import { SpecialistService } from '@/services/specialist.service'
 import { UserService } from '@/services/user.service'
 import { Specialist } from '@/types/specialist.type'
+import { AllUsersSearchQuery } from '@/dtos/all-users-search-query.dto'
 
 @JsonController('/specialists')
 export class SpecialistController {
   private readonly _specialistService: SpecialistService = new SpecialistService(
     new SpecialistRepository(),
-    new UserService(new UserRepository(), new EncryptService(), new AdminRepository()),
+    new UserService(
+      new UserRepository(),
+      new EncryptService(),
+      new AdminRepository(new EncryptService())
+    ),
     new SpecialtyRepository()
   )
 
@@ -40,6 +45,12 @@ export class SpecialistController {
   @Get('/all')
   public getAll() {
     return this._specialistService.getAllSpecialists()
+  }
+
+  @HttpCode(200)
+  @Get('/all/admin')
+  public getAllAdmin(@QueryParams() searchQuery: AllUsersSearchQuery) {
+    return this._specialistService.getAllSpecialistsAdmin(searchQuery.query)
   }
 
   @HttpCode(200)

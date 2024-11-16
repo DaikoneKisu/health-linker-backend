@@ -29,7 +29,11 @@ export class ChatRoomController {
     new ChatRoomRepository(),
     new SpecialistService(
       new SpecialistRepository(),
-      new UserService(new UserRepository(), new EncryptService(), new AdminRepository()),
+      new UserService(
+        new UserRepository(),
+        new EncryptService(),
+        new AdminRepository(new EncryptService())
+      ),
       new SpecialtyRepository()
     )
   )

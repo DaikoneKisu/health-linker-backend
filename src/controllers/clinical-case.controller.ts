@@ -43,12 +43,20 @@ export class ClinicalCaseController {
     new ClinicalCaseRepository(),
     new RuralProfessionalService(
       new RuralProfessionalRepository(),
-      new UserService(new UserRepository(), new EncryptService(), new AdminRepository())
+      new UserService(
+        new UserRepository(),
+        new EncryptService(),
+        new AdminRepository(new EncryptService())
+      )
     ),
     new SpecialtyRepository(),
     new SpecialistService(
       new SpecialistRepository(),
-      new UserService(new UserRepository(), new EncryptService(), new AdminRepository()),
+      new UserService(
+        new UserRepository(),
+        new EncryptService(),
+        new AdminRepository(new EncryptService())
+      ),
       new SpecialtyRepository()
     )
   )
@@ -58,7 +66,11 @@ export class ClinicalCaseController {
       this._clinicalCaseService,
       new SpecialistService(
         new SpecialistRepository(),
-        new UserService(new UserRepository(), new EncryptService(), new AdminRepository()),
+        new UserService(
+          new UserRepository(),
+          new EncryptService(),
+          new AdminRepository(new EncryptService())
+        ),
         new SpecialtyRepository()
       )
     )
@@ -68,11 +80,19 @@ export class ClinicalCaseController {
       this._specialistMentorsClinicalCaseService,
       new RuralProfessionalService(
         new RuralProfessionalRepository(),
-        new UserService(new UserRepository(), new EncryptService(), new AdminRepository())
+        new UserService(
+          new UserRepository(),
+          new EncryptService(),
+          new AdminRepository(new EncryptService())
+        )
       ),
       new SpecialistService(
         new SpecialistRepository(),
-        new UserService(new UserRepository(), new EncryptService(), new AdminRepository()),
+        new UserService(
+          new UserRepository(),
+          new EncryptService(),
+          new AdminRepository(new EncryptService())
+        ),
         new SpecialtyRepository()
       )
     )
