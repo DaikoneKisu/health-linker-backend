@@ -1,4 +1,4 @@
-import { CreateAdminDto, UpdateAdminDto } from '@/dtos/admin.dto'
+import { AdminCredentialsDto, CreateAdminDto, UpdateAdminDto } from '@/dtos/admin.dto'
 import { ConflictError } from '@/exceptions/conflict-error'
 import { AdminRepository } from '@/repositories/admin.repository'
 import { UserRepository } from '@/repositories/user.repository'
@@ -79,5 +79,9 @@ export class AdminService {
   public async deleteAdmin(email: Admin['email']) {
     //TODO: Handle case when AdminRespository.delete returns undefined
     return await this._adminRepository.delete(email)
+  }
+
+  public async signInAdmin(adminDto: AdminCredentialsDto) {
+    return await this._adminRepository.signIn(adminDto.email, adminDto.password)
   }
 }

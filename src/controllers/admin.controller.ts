@@ -15,13 +15,13 @@ import { AdminService } from '@/services/admin.service'
 import { EncryptService } from '@/services/encrypt.service'
 import { PaginationQuery } from '@/dtos/pagination-query.dto'
 import { Admin } from '@/types/admin.type'
-import { CreateAdminDto, UpdateAdminDto } from '@/dtos/admin.dto'
+import { AdminCredentialsDto, CreateAdminDto, UpdateAdminDto } from '@/dtos/admin.dto'
 import { UserRepository } from '@/repositories/user.repository'
 
 @JsonController('/admins')
 export class AdminController {
   private readonly _adminService: AdminService = new AdminService(
-    new AdminRepository(),
+    new AdminRepository(new EncryptService()),
     new EncryptService(),
     new UserRepository()
   )
@@ -61,5 +61,11 @@ export class AdminController {
   @Delete('/:email')
   public delete(@Param('email') email: Admin['email']) {
     return this._adminService.deleteAdmin(email)
+  }
+
+  @HttpCode(200)
+  @Post('/signin')
+  public signIn(@Body() signInAdminDto: AdminCredentialsDto) {
+    return this._adminService.signInAdmin(signInAdminDto)
   }
 }

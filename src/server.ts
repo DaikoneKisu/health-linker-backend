@@ -27,7 +27,11 @@ import { ChatMessageController } from './controllers/chat-message.controller'
 
 const encryptService = new EncryptService()
 
-const userService = new UserService(new UserRepository(), encryptService, new AdminRepository())
+const userService = new UserService(
+  new UserRepository(),
+  encryptService,
+  new AdminRepository(new EncryptService())
+)
 
 const authService: AuthService = new AuthService(
   userService,
