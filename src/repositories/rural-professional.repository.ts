@@ -70,12 +70,29 @@ export class RuralProfessionalRepository {
   }
 
   public async find(document: RuralProfessional['document']) {
+    const caseCountSubquery = this._db
+      .select({
+        userDocument: clinicalCaseModel.ruralProfessionalDocument,
+        caseCount: count(clinicalCaseModel.id).as('caseCount')
+      })
+      .from(clinicalCaseModel)
+      .groupBy(clinicalCaseModel.ruralProfessionalDocument)
+      .as('caseCountSubquery')
+
     const rows = await this._db
       .select({
+        fullName: userModel.fullName,
         document: ruralProfessionalModel.document,
-        zone: ruralProfessionalModel.zone
+        zone: ruralProfessionalModel.zone,
+        email: userModel.email,
+        caseCount: caseCountSubquery.caseCount
       })
       .from(ruralProfessionalModel)
+      .innerJoin(userModel, eq(userModel.document, ruralProfessionalModel.document))
+      .leftJoin(
+        caseCountSubquery,
+        eq(caseCountSubquery.userDocument, ruralProfessionalModel.document)
+      )
       .where(eq(ruralProfessionalModel.document, document))
 
     return rows.at(0)

@@ -72,13 +72,31 @@ export class SpecialistRepository {
     return rows
   }
 
-  public async find(document: Specialist['document']): Promise<FindSpecialist | undefined> {
+  public async find(document: Specialist['document']) {
+    const feedbackCountSubquery = this._db
+      .select({
+        userDocument: clinicalCaseFeedbackModel.userDocument,
+        feedbackCount: count(clinicalCaseFeedbackModel.clinicalCaseId).as('feedbackCount')
+      })
+      .from(clinicalCaseFeedbackModel)
+      .groupBy(clinicalCaseFeedbackModel.userDocument)
+      .as('feedbackCountSubquery')
+
     const rows = await this._db
       .select({
+        fullName: userModel.fullName,
         document: specialistModel.document,
-        specialtyId: specialistModel.specialtyId
+        speciality: specialtyModel.name,
+        email: userModel.email,
+        feedbackCount: feedbackCountSubquery.feedbackCount
       })
       .from(specialistModel)
+      .innerJoin(specialtyModel, eq(specialtyModel.id, specialistModel.specialtyId))
+      .innerJoin(userModel, eq(userModel.document, specialistModel.document))
+      .leftJoin(
+        feedbackCountSubquery,
+        eq(feedbackCountSubquery.userDocument, specialistModel.document)
+      )
       .where(eq(specialistModel.document, document))
 
     return rows.at(0)

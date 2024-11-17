@@ -17,6 +17,7 @@ import { PaginationQuery } from '@/dtos/pagination-query.dto'
 import { Admin } from '@/types/admin.type'
 import { AdminCredentialsDto, CreateAdminDto, UpdateAdminDto } from '@/dtos/admin.dto'
 import { UserRepository } from '@/repositories/user.repository'
+import { AllUsersSearchQuery } from '@/dtos/all-users-search-query.dto'
 
 @JsonController('/admins')
 export class AdminController {
@@ -34,8 +35,8 @@ export class AdminController {
 
   @HttpCode(200)
   @Get('/all')
-  public getAll() {
-    return this._adminService.getAllAdmins()
+  public getAll(@QueryParams() searchQuery: AllUsersSearchQuery) {
+    return this._adminService.getAllAdmins(searchQuery.query)
   }
 
   @HttpCode(200)

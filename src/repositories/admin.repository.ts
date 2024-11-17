@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm'
+import { eq, like, or } from 'drizzle-orm'
 import { type PgDatabase } from '@/types/pg-database.type'
 import { pgDatabase } from '@/pg-database'
 import { Admin, FindAdmin, NewAdmin, UpdateAdmin } from '@/types/admin.type'
@@ -16,15 +16,15 @@ export class AdminRepository {
     this._encryptService = encryptService
   }
 
-  public async findAll(): Promise<FindAdmin[]> {
-    return (
-      (await this._db
-        .select({
-          email: adminModel.email,
-          fullName: adminModel.fullName
-        })
-        .from(adminModel)) || []
-    )
+  public async findAll(query: string) {
+    const rows = await this._db
+      .select({
+        email: adminModel.email,
+        fullName: adminModel.fullName
+      })
+      .from(adminModel)
+      .where(or(like(adminModel.email, `%${query}%`), like(adminModel.fullName, `%${query}%`)))
+    return rows || []
   }
 
   public async findWithLimitAndOffset(limit: number, offset: number): Promise<FindAdmin[]> {

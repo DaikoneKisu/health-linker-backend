@@ -21,8 +21,8 @@ export class AdminService {
     this._userRepository = userRepository
   }
 
-  public async getAllAdmins() {
-    return await this._adminRepository.findAll()
+  public async getAllAdmins(query = '') {
+    return await this._adminRepository.findAll(query)
   }
 
   public async getAdmin(email: Admin['email']) {
