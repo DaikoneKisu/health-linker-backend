@@ -45,7 +45,7 @@ export class AuthService {
     return 'Usuario registrado con éxito.'
   }
 
-  public async signIn(document: User['document'], password: string): Promise<string | undefined> {
+  public async signIn(document: User['document'], password: string) {
     const user = await this._userService.getUser(document)
 
     if (!user) {
@@ -65,7 +65,7 @@ export class AuthService {
       throw new UnauthorizedError('La contraseña provista es incorrecta.')
     }
 
-    return this.tokenize(user)
+    return { token: this.tokenize(user), type: user.userType }
   }
 
   private tokenize(user: FindUser): string {
