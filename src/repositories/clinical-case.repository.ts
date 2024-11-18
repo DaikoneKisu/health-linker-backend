@@ -96,7 +96,8 @@ export class ClinicalCaseRepository {
       .where(
         and(
           eq(clinicalCaseModel.isClosed, isClosed),
-          eq(clinicalCaseModel.ruralProfessionalDocument, ruralProfessionalDocument)
+          eq(clinicalCaseModel.ruralProfessionalDocument, ruralProfessionalDocument),
+          isNull(clinicalCaseModel.errasedAt)
         )
       )
 
