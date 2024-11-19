@@ -1,4 +1,4 @@
-import { eq, and, like, or } from 'drizzle-orm'
+import { eq, and, like, or, desc } from 'drizzle-orm'
 import { PgDatabase } from '@/types/pg-database.type'
 import { pgDatabase } from '@/pg-database'
 import { clinicalCaseModel } from '@/models/clinical-case.model'
@@ -54,6 +54,72 @@ export class ClinicalCaseRepository {
         ruralProfessionalDocument: clinicalCaseModel.ruralProfessionalDocument
       })
       .from(clinicalCaseModel)
+      .limit(limit)
+      .offset(limit * offset)
+
+    return rows
+  }
+
+  public async findOpenWithLimitAndOffset(limit: number, offset: number, query: string) {
+    const rows = await this._db
+      .select({
+        id: clinicalCaseModel.id,
+        description: clinicalCaseModel.description,
+        reason: clinicalCaseModel.reason,
+        isPublic: clinicalCaseModel.isPublic,
+        isClosed: clinicalCaseModel.isClosed,
+        patientBirthdate: clinicalCaseModel.patientBirthdate,
+        patientGender: clinicalCaseModel.patientGender,
+        patientReason: clinicalCaseModel.patientReason,
+        patientAssessment: clinicalCaseModel.patientAssessment,
+        requiredSpecialtyId: clinicalCaseModel.requiredSpecialtyId,
+        ruralProfessionalDocument: clinicalCaseModel.ruralProfessionalDocument
+      })
+      .from(clinicalCaseModel)
+      .where(
+        and(
+          eq(clinicalCaseModel.isClosed, false),
+          or(
+            like(clinicalCaseModel.patientReason, `%${query}%`),
+            like(clinicalCaseModel.patientAssessment, `%${query}%`),
+            like(clinicalCaseModel.description, `%${query}%`)
+          )
+        )
+      )
+      .orderBy(desc(clinicalCaseModel.createdAt))
+      .limit(limit)
+      .offset(limit * offset)
+
+    return rows
+  }
+
+  public async findClosedWithLimitAndOffset(limit: number, offset: number, query: string) {
+    const rows = await this._db
+      .select({
+        id: clinicalCaseModel.id,
+        description: clinicalCaseModel.description,
+        reason: clinicalCaseModel.reason,
+        isPublic: clinicalCaseModel.isPublic,
+        isClosed: clinicalCaseModel.isClosed,
+        patientBirthdate: clinicalCaseModel.patientBirthdate,
+        patientGender: clinicalCaseModel.patientGender,
+        patientReason: clinicalCaseModel.patientReason,
+        patientAssessment: clinicalCaseModel.patientAssessment,
+        requiredSpecialtyId: clinicalCaseModel.requiredSpecialtyId,
+        ruralProfessionalDocument: clinicalCaseModel.ruralProfessionalDocument
+      })
+      .from(clinicalCaseModel)
+      .where(
+        and(
+          eq(clinicalCaseModel.isClosed, true),
+          or(
+            like(clinicalCaseModel.patientReason, `%${query}%`),
+            like(clinicalCaseModel.patientAssessment, `%${query}%`),
+            like(clinicalCaseModel.description, `%${query}%`)
+          )
+        )
+      )
+      .orderBy(desc(clinicalCaseModel.createdAt))
       .limit(limit)
       .offset(limit * offset)
 
@@ -179,8 +245,9 @@ export class ClinicalCaseRepository {
   public async findByIsPublicWithLimitAndOffset(
     limit: number,
     offset: number,
-    isPublic: ClinicalCase['isPublic']
-  ): Promise<FindClinicalCase[] | undefined> {
+    isPublic: ClinicalCase['isPublic'],
+    query: string
+  ) {
     const rows = await this._db
       .select({
         id: clinicalCaseModel.id,
@@ -196,7 +263,16 @@ export class ClinicalCaseRepository {
         ruralProfessionalDocument: clinicalCaseModel.ruralProfessionalDocument
       })
       .from(clinicalCaseModel)
-      .where(eq(clinicalCaseModel.isPublic, isPublic))
+      .where(
+        and(
+          eq(clinicalCaseModel.isPublic, isPublic),
+          or(
+            like(clinicalCaseModel.patientReason, `%${query}%`),
+            like(clinicalCaseModel.patientAssessment, `%${query}%`),
+            like(clinicalCaseModel.description, `%${query}%`)
+          )
+        )
+      )
       .limit(limit)
       .offset(limit * offset)
 

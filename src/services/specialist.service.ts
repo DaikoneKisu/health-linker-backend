@@ -26,6 +26,10 @@ export class SpecialistService {
     return await this._specialistRepository.findAll()
   }
 
+  public async getAllSpecialistsAdmin(query = '') {
+    return await this._specialistRepository.findAllAdmin(query)
+  }
+
   public async getSpecialist(document: Specialist['document']) {
     return await this._specialistRepository.find(document)
   }

@@ -17,13 +17,18 @@ import { UserService } from '@/services/user.service'
 import { RuralProfessional } from '@/types/rural-professional.type'
 import { PaginationQuery } from '@/dtos/pagination-query.dto'
 import { UpdateRuralProfessionalDto } from '@/dtos/rural-professional.dto'
+import { AllUsersSearchQuery } from '@/dtos/all-users-search-query.dto'
 
 @JsonController('/rural-professionals')
 export class RuralProfessionalController {
   private readonly _ruralProfessionalService: RuralProfessionalService =
     new RuralProfessionalService(
       new RuralProfessionalRepository(),
-      new UserService(new UserRepository(), new EncryptService(), new AdminRepository())
+      new UserService(
+        new UserRepository(),
+        new EncryptService(),
+        new AdminRepository(new EncryptService())
+      )
     )
 
   @HttpCode(200)
@@ -39,6 +44,12 @@ export class RuralProfessionalController {
   @Get('/all')
   public getAll() {
     return this._ruralProfessionalService.getAllRuralProfessionals()
+  }
+
+  @HttpCode(200)
+  @Get('/all/admin')
+  public getAllAdmin(@QueryParams() searchQuery: AllUsersSearchQuery) {
+    return this._ruralProfessionalService.getAllRuralsAdmin(searchQuery.query)
   }
 
   @HttpCode(200)

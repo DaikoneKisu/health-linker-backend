@@ -5,5 +5,6 @@ export const whitelistedRoutes: RegExp[] = [
   new RegExp('^/?$'),
   new RegExp('^/favicon.ico$'),
   new RegExp('^/healthcheck/?$'),
-  new RegExp('^/specialties/all/?$')
+  new RegExp('^/specialties/all/?$'),
+  new RegExp('^/admins/signin$')
 ]

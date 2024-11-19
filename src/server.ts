@@ -24,10 +24,22 @@ import { ClinicalCaseFeedbackController } from './controllers/clinical-case-feed
 import { ClinicalCaseFileController } from './controllers/clinical-case-file.controller'
 import { ChatRoomController } from './controllers/chat-room.controller'
 import { ChatMessageController } from './controllers/chat-message.controller'
+import { EducationalResourceController } from './controllers/educational-resource.controller'
+import { AdminService } from './services/admin.service'
 
 const encryptService = new EncryptService()
 
-const userService = new UserService(new UserRepository(), encryptService, new AdminRepository())
+const userService = new UserService(
+  new UserRepository(),
+  encryptService,
+  new AdminRepository(new EncryptService())
+)
+
+const adminService = new AdminService(
+  new AdminRepository(new EncryptService()),
+  new EncryptService(),
+  new UserRepository()
+)
 
 const authService: AuthService = new AuthService(
   userService,
@@ -50,10 +62,11 @@ export const app = new App(
     ClinicalCaseFeedbackController,
     ClinicalCaseFileController,
     ChatRoomController,
-    ChatMessageController
+    ChatMessageController,
+    EducationalResourceController
   ],
-  authorization(userService, authService),
-  currentUser(userService, authService)
+  authorization(userService, authService, adminService),
+  currentUser(userService, authService, adminService)
 )
 
 app.listen()

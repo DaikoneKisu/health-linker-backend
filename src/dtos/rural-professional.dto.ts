@@ -16,9 +16,10 @@ export class CreateRuralProfessionalDto extends CreateUserDto implements NewRura
     fullName: string,
     phoneNumber: string,
     password: string,
+    isVerified: boolean,
     zone: string
   ) {
-    super(document, email, fullName, phoneNumber, password)
+    super(document, email, fullName, phoneNumber, password, isVerified)
     this.zone = zone
   }
 }

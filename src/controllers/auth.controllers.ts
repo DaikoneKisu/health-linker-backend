@@ -16,15 +16,27 @@ import { CreateSpecialistDto } from '@/dtos/specialist.dto'
 @JsonController('/auth')
 export class AuthController {
   private readonly _authService: AuthService = new AuthService(
-    new UserService(new UserRepository(), new EncryptService(), new AdminRepository()),
+    new UserService(
+      new UserRepository(),
+      new EncryptService(),
+      new AdminRepository(new EncryptService())
+    ),
     new EncryptService(),
     new RuralProfessionalService(
       new RuralProfessionalRepository(),
-      new UserService(new UserRepository(), new EncryptService(), new AdminRepository())
+      new UserService(
+        new UserRepository(),
+        new EncryptService(),
+        new AdminRepository(new EncryptService())
+      )
     ),
     new SpecialistService(
       new SpecialistRepository(),
-      new UserService(new UserRepository(), new EncryptService(), new AdminRepository()),
+      new UserService(
+        new UserRepository(),
+        new EncryptService(),
+        new AdminRepository(new EncryptService())
+      ),
       new SpecialtyRepository()
     )
   )

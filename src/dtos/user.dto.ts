@@ -1,4 +1,12 @@
-import { IsEmail, IsNumberString, IsOptional, IsString, Length, Matches } from 'class-validator'
+import {
+  IsBoolean,
+  IsEmail,
+  IsNumberString,
+  IsOptional,
+  IsString,
+  Length,
+  Matches
+} from 'class-validator'
 import { NewUser } from '@/types/new-user.type'
 import { UpdateUser } from '@/types/update-user.type'
 
@@ -53,18 +61,23 @@ export class CreateUserDto implements Omit<NewUser, 'userType'> {
   })
   public password: string
 
+  @IsBoolean()
+  public isVerified: boolean
+
   constructor(
     document: string,
     email: string,
     fullName: string,
     phoneNumber: string,
-    password: string
+    password: string,
+    isVerified: boolean
   ) {
     this.document = document
     this.email = email
     this.fullName = fullName
     this.phoneNumber = phoneNumber
     this.password = password
+    this.isVerified = isVerified
   }
 }
 
