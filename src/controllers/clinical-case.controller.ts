@@ -274,6 +274,12 @@ export class ClinicalCaseController {
   }
 
   @HttpCode(200)
+  @Get('/library')
+  public getLibrary(@QueryParams() { page, size, query }: ClinicalCaseSearchDto) {
+    return this._clinicalCaseService.getPaginatedPublicClinicalCases(page, size, query)
+  }
+
+  @HttpCode(200)
   @Get('/:id')
   @OnUndefined(404)
   public getOne(@Params() { id }: PositiveNumericIdDto) {

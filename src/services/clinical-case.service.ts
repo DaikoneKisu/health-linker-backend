@@ -120,8 +120,13 @@ export class ClinicalCaseService {
     )
   }
 
-  public async getPaginatedPublicClinicalCases(page: number = 1, size: number = 10) {
-    return await this._clinicalCaseRepository.findByIsPublicWithLimitAndOffset(size, page - 1, true)
+  public async getPaginatedPublicClinicalCases(page = 1, size = 100, query = '') {
+    return await this._clinicalCaseRepository.findByIsPublicWithLimitAndOffset(
+      size,
+      page - 1,
+      true,
+      query
+    )
   }
 
   public async getPaginatedRuralProfessionalClinicalCases(

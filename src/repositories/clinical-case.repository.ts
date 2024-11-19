@@ -245,8 +245,9 @@ export class ClinicalCaseRepository {
   public async findByIsPublicWithLimitAndOffset(
     limit: number,
     offset: number,
-    isPublic: ClinicalCase['isPublic']
-  ): Promise<FindClinicalCase[] | undefined> {
+    isPublic: ClinicalCase['isPublic'],
+    query: string
+  ) {
     const rows = await this._db
       .select({
         id: clinicalCaseModel.id,
@@ -262,7 +263,16 @@ export class ClinicalCaseRepository {
         ruralProfessionalDocument: clinicalCaseModel.ruralProfessionalDocument
       })
       .from(clinicalCaseModel)
-      .where(eq(clinicalCaseModel.isPublic, isPublic))
+      .where(
+        and(
+          eq(clinicalCaseModel.isPublic, isPublic),
+          or(
+            like(clinicalCaseModel.patientReason, `%${query}%`),
+            like(clinicalCaseModel.patientAssessment, `%${query}%`),
+            like(clinicalCaseModel.description, `%${query}%`)
+          )
+        )
+      )
       .limit(limit)
       .offset(limit * offset)
 
