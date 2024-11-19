@@ -10,6 +10,7 @@ import { CreateRuralProfessionalDto } from '@/dtos/rural-professional.dto'
 import { EXPIRES_IN, SECRET_KEY } from '@/config/env'
 import { SpecialistService } from './specialist.service'
 import { CreateSpecialistDto } from '@/dtos/specialist.dto'
+import { FindAdmin } from '@/types/admin.type'
 
 export class AuthService {
   private readonly _userService: UserService
@@ -76,7 +77,7 @@ export class AuthService {
     })
   }
 
-  public verify(token?: string): FindUser | undefined {
+  public verify(token?: string): FindAdmin | FindUser | undefined {
     if (token == null) {
       return
     }
@@ -88,7 +89,7 @@ export class AuthService {
     }
 
     try {
-      return verify(extractedToken, SECRET_KEY, { algorithms: ['HS256'] }) as FindUser
+      return verify(extractedToken, SECRET_KEY, { algorithms: ['HS256'] }) as FindAdmin | FindUser
     } catch (_e: unknown) {
       return
     }

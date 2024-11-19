@@ -36,6 +36,8 @@ import { CreateSpecialistMentorsClinicalCaseDto } from '@/dtos/specialist-mentor
 import { validateSync } from 'class-validator'
 import { UnprocessableContentError } from '@/exceptions/unprocessable-content-error'
 import { ClinicalCaseSearchDto } from '@/dtos/clinical-case-search.dto'
+import { FindAdmin } from '@/types/admin.type'
+import { AdminService } from '@/services/admin.service'
 
 @JsonController('/clinical-cases')
 export class ClinicalCaseController {
@@ -58,6 +60,11 @@ export class ClinicalCaseController {
         new AdminRepository(new EncryptService())
       ),
       new SpecialtyRepository()
+    ),
+    new AdminService(
+      new AdminRepository(new EncryptService()),
+      new EncryptService(),
+      new UserRepository()
     )
   )
   private readonly _specialistMentorsClinicalCaseService: SpecialistMentorsClinicalCaseService =
@@ -183,6 +190,24 @@ export class ClinicalCaseController {
     throw new UnprocessableContentError(
       'Solo los profesionales rurales y especialistas pueden acceder a sus casos clínicos.'
     )
+  }
+
+  @HttpCode(200)
+  @Get('/open/current-admin')
+  public getOpenCurrentAdmin(
+    @QueryParams() { page, size, query }: ClinicalCaseSearchDto,
+    @CurrentUser() user: FindAdmin
+  ) {
+    return this._clinicalCaseService.getPaginatedOpenCases(page, size, query, user.email)
+  }
+
+  @HttpCode(200)
+  @Get('/closed/current-admin')
+  public getClosedCurrentAdmin(
+    @QueryParams() { page, size, query }: ClinicalCaseSearchDto,
+    @CurrentUser() user: FindAdmin
+  ) {
+    return this._clinicalCaseService.getPaginatedClosedCases(page, size, query, user.email)
   }
 
   // @HttpCode(200)

@@ -6,27 +6,32 @@ import { SpecialistService } from './specialist.service'
 import { CreateClinicalCaseDto, UpdateClinicalCaseDto } from '@/dtos/clinical-case.dto'
 import { ClinicalCase, NewClinicalCase, UpdateClinicalCase } from '@/types/clinical-case.type'
 import { UnprocessableContentError } from '@/exceptions/unprocessable-content-error'
-import { InternalServerError, NotFoundError } from 'routing-controllers'
+import { InternalServerError, NotFoundError, UnauthorizedError } from 'routing-controllers'
 import { RuralProfessional } from '@/types/rural-professional.type'
 import { FindUser } from '@/types/find-user.type'
 import { Specialist } from '@/types/specialist.type'
+import { FindAdmin } from '@/types/admin.type'
+import { AdminService } from './admin.service'
 
 export class ClinicalCaseService {
   private readonly _clinicalCaseRepository: ClinicalCaseRepository
   private readonly _ruralProfessionalService: RuralProfessionalService
   private readonly _specialtyRepository: SpecialtyRepository
   private readonly _specialistService: SpecialistService
+  private readonly _adminService: AdminService
 
   constructor(
     clinicalCaseRepository: ClinicalCaseRepository,
     ruralProfessionalService: RuralProfessionalService,
     specialtyRepository: SpecialtyRepository,
-    specialistService: SpecialistService
+    specialistService: SpecialistService,
+    adminService: AdminService
   ) {
     this._clinicalCaseRepository = clinicalCaseRepository
     this._ruralProfessionalService = ruralProfessionalService
     this._specialtyRepository = specialtyRepository
     this._specialistService = specialistService
+    this._adminService = adminService
   }
 
   public async getAllClinicalCases(query = '') {
@@ -56,6 +61,31 @@ export class ClinicalCaseService {
 
   public async getPaginatedClinicalCases(page: number = 1, size: number = 10) {
     return await this._clinicalCaseRepository.findWithLimitAndOffset(size, page - 1)
+  }
+
+  public async getPaginatedOpenCases(page = 1, size = 100, query = '', email: FindAdmin['email']) {
+    // Validate admin
+    const admin = await this._adminService.getAdmin(email)
+    if (!admin) {
+      throw new UnauthorizedError('No tiene permisos para esta acción.')
+    }
+
+    return await this._clinicalCaseRepository.findOpenWithLimitAndOffset(page - 1, size, query)
+  }
+
+  public async getPaginatedClosedCases(
+    page = 1,
+    size = 100,
+    query = '',
+    email: FindAdmin['email']
+  ) {
+    // Validate admin
+    const admin = await this._adminService.getAdmin(email)
+    if (!admin) {
+      throw new UnauthorizedError('No tiene permisos para esta acción.')
+    }
+
+    return await this._clinicalCaseRepository.findClosedWithLimitAndOffset(page - 1, size, query)
   }
 
   public async getPaginatedRecordClinicalCases(

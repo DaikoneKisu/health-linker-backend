@@ -86,6 +86,7 @@ export class SpecialistRepository {
       .select({
         fullName: userModel.fullName,
         document: specialistModel.document,
+        specialtyId: specialistModel.specialtyId,
         speciality: specialtyModel.name,
         email: userModel.email,
         feedbackCount: feedbackCountSubquery.feedbackCount

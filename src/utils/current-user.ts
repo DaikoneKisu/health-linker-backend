@@ -1,9 +1,16 @@
 import { Action } from 'routing-controllers'
 import { AuthService } from '@/services/auth.service'
 import { UserService } from '@/services/user.service'
+import { AdminService } from '@/services/admin.service'
+import { FindUser } from '@/types/find-user.type'
+import { FindAdmin } from '@/types/admin.type'
 
-export function currentUser(userService: UserService, authService: AuthService) {
-  return async (action: Action) => {
+export function currentUser(
+  userService: UserService,
+  authService: AuthService,
+  adminService: AdminService
+) {
+  return async (action: Action): Promise<FindUser | FindAdmin | undefined> => {
     const {
       headers: { authorization: token }
     } = action.request as { headers: { authorization: string } }
@@ -14,12 +21,10 @@ export function currentUser(userService: UserService, authService: AuthService) 
       return
     }
 
-    const userInDb = await userService.getUser(user.document)
-
-    if (!userInDb) {
-      return
+    if ('document' in user) {
+      return await userService.getUser(user.document)
+    } else {
+      return await adminService.getAdmin(user.email)
     }
-
-    return userInDb
   }
 }

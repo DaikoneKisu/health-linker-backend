@@ -2,8 +2,15 @@ import { Action } from 'routing-controllers'
 import { Role } from '@/types/role'
 import { AuthService } from '@/services/auth.service'
 import { UserService } from '@/services/user.service'
+import { AdminService } from '@/services/admin.service'
+import { FindAdmin } from '@/types/admin.type'
+import { FindUser } from '@/types/find-user.type'
 
-export function authorization(userService: UserService, authService: AuthService) {
+export function authorization(
+  userService: UserService,
+  authService: AuthService,
+  adminService: AdminService
+) {
   return async (action: Action, roles: Role[]) => {
     const {
       headers: { authorization: token }
@@ -15,14 +22,21 @@ export function authorization(userService: UserService, authService: AuthService
       return false
     }
 
-    const userInDb = await userService.getUser(user.document)
+    let userInDb: FindAdmin | FindUser | undefined = undefined
+    if ('document' in user) {
+      userInDb = await userService.getUser(user.document)
+    } else {
+      userInDb = await adminService.getAdmin(user.email)
+    }
 
     if (!userInDb) {
       return false
     }
 
-    if (!roles.includes(userInDb.userType)) {
-      return false
+    if ('document' in userInDb) {
+      if (!roles.includes(userInDb.userType)) {
+        return false
+      }
     }
 
     return true
