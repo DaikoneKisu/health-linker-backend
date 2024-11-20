@@ -27,11 +27,15 @@ import { AuthorizationChecker } from 'routing-controllers/types/AuthorizationChe
 import { CurrentUserChecker } from 'routing-controllers/types/CurrentUserChecker'
 import { getMetadataStorage } from 'class-validator'
 // import { ErrorMiddleware } from '@middlewares/error.middleware';
+import { createServer, Server as NodeServer } from 'node:http'
+import { SocketProvider } from './socketProvider'
 
 export class App {
   public app: express.Application
   public env: string
   public port: string | number
+  public server: NodeServer
+  public socketProvider: SocketProvider
 
   constructor(
     controllers: ClassConstructor<unknown>[],
@@ -57,10 +61,14 @@ export class App {
 
     this.initializeAfterMiddlewares()
     // this.initializeErrorHandling();
+
+    // For the chat server
+    this.server = createServer(this.app)
+    this.socketProvider = new SocketProvider(this.server)
   }
 
   public listen() {
-    this.app.listen(this.port, () => {
+    this.server.listen(this.port, () => {
       console.info(`=================================`)
       console.info(`${isProd ? '=' : ''}======= ENV: ${this.env} ========`)
       console.info(`= 🚀 App listening on port ${this.port} =`)
@@ -81,6 +89,10 @@ export class App {
   }
 
   private initializeStaticFiles() {
+    this.app.use(`/${PUBLIC_PATH}`, (_, res, next) => {
+      res.set('Cross-Origin-Resource-Policy', 'cross-origin')
+      next()
+    })
     this.app.use(`/${PUBLIC_PATH}`, express.static(path.join(__dirname, '../', PUBLIC_DIR)))
   }
 

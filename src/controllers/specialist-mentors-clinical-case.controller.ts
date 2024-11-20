@@ -29,7 +29,7 @@ export class SpecialistMentorsClinicalCaseController {
   private readonly _userService: UserService = new UserService(
     new UserRepository(),
     new EncryptService(),
-    new AdminRepository()
+    new AdminRepository(new EncryptService())
   )
   private readonly _specialistMentorsClinicalCaseService: SpecialistMentorsClinicalCaseService =
     new SpecialistMentorsClinicalCaseService(

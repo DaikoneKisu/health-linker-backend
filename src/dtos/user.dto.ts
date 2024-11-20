@@ -1,4 +1,12 @@
-import { IsEmail, IsOptional, IsString, Length, Matches } from 'class-validator'
+import {
+  IsBoolean,
+  IsEmail,
+  IsNumberString,
+  IsOptional,
+  IsString,
+  Length,
+  Matches
+} from 'class-validator'
 import { NewUser } from '@/types/new-user.type'
 import { UpdateUser } from '@/types/update-user.type'
 
@@ -41,6 +49,11 @@ export class CreateUserDto implements Omit<NewUser, 'userType'> {
   @Length(1, 100)
   public fullName: string
 
+  @Length(10, 15)
+  @IsNumberString()
+  @IsString()
+  public phoneNumber: string
+
   @IsString()
   @Length(8, 60)
   @Matches(/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, {
@@ -48,11 +61,23 @@ export class CreateUserDto implements Omit<NewUser, 'userType'> {
   })
   public password: string
 
-  constructor(document: string, email: string, fullName: string, password: string) {
+  @IsBoolean()
+  public isVerified: boolean
+
+  constructor(
+    document: string,
+    email: string,
+    fullName: string,
+    phoneNumber: string,
+    password: string,
+    isVerified: boolean
+  ) {
     this.document = document
     this.email = email
     this.fullName = fullName
+    this.phoneNumber = phoneNumber
     this.password = password
+    this.isVerified = isVerified
   }
 }
 
@@ -67,6 +92,12 @@ export class UpdateUserDto implements Omit<UpdateUser, 'isVerified'> {
   @IsString()
   @Length(1, 100)
   public fullName?: string
+
+  @IsOptional()
+  @IsString()
+  @IsNumberString()
+  @Length(10, 15)
+  public phoneNumber?: string
 
   @IsOptional()
   @IsString()

@@ -10,8 +10,16 @@ export class CreateRuralProfessionalDto extends CreateUserDto implements NewRura
   })
   public zone: string
 
-  constructor(document: string, email: string, fullName: string, password: string, zone: string) {
-    super(document, email, fullName, password)
+  constructor(
+    document: string,
+    email: string,
+    fullName: string,
+    phoneNumber: string,
+    password: string,
+    isVerified: boolean,
+    zone: string
+  ) {
+    super(document, email, fullName, phoneNumber, password, isVerified)
     this.zone = zone
   }
 }

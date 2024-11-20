@@ -35,7 +35,13 @@ import { plainToClass } from 'class-transformer'
 import { CreateSpecialistMentorsClinicalCaseDto } from '@/dtos/specialist-mentors-clinical-case.dto'
 import { validateSync } from 'class-validator'
 import { UnprocessableContentError } from '@/exceptions/unprocessable-content-error'
+
 import { NotificationService } from '@/services/notification.service'
+
+import { ClinicalCaseSearchDto } from '@/dtos/clinical-case-search.dto'
+import { FindAdmin } from '@/types/admin.type'
+import { AdminService } from '@/services/admin.service'
+
 
 @JsonController('/clinical-cases')
 export class ClinicalCaseController {
@@ -43,13 +49,26 @@ export class ClinicalCaseController {
     new ClinicalCaseRepository(),
     new RuralProfessionalService(
       new RuralProfessionalRepository(),
-      new UserService(new UserRepository(), new EncryptService(), new AdminRepository())
+      new UserService(
+        new UserRepository(),
+        new EncryptService(),
+        new AdminRepository(new EncryptService())
+      )
     ),
     new SpecialtyRepository(),
     new SpecialistService(
       new SpecialistRepository(),
-      new UserService(new UserRepository(), new EncryptService(), new AdminRepository()),
+      new UserService(
+        new UserRepository(),
+        new EncryptService(),
+        new AdminRepository(new EncryptService())
+      ),
       new SpecialtyRepository()
+    ),
+    new AdminService(
+      new AdminRepository(new EncryptService()),
+      new EncryptService(),
+      new UserRepository()
     )
   )
   private readonly _notificationService: NotificationService = new NotificationService()
@@ -59,7 +78,11 @@ export class ClinicalCaseController {
       this._clinicalCaseService,
       new SpecialistService(
         new SpecialistRepository(),
-        new UserService(new UserRepository(), new EncryptService(), new AdminRepository()),
+        new UserService(
+          new UserRepository(),
+          new EncryptService(),
+          new AdminRepository(new EncryptService())
+        ),
         new SpecialtyRepository()
       )
     )
@@ -69,11 +92,19 @@ export class ClinicalCaseController {
       this._specialistMentorsClinicalCaseService,
       new RuralProfessionalService(
         new RuralProfessionalRepository(),
-        new UserService(new UserRepository(), new EncryptService(), new AdminRepository())
+        new UserService(
+          new UserRepository(),
+          new EncryptService(),
+          new AdminRepository(new EncryptService())
+        )
       ),
       new SpecialistService(
         new SpecialistRepository(),
-        new UserService(new UserRepository(), new EncryptService(), new AdminRepository()),
+        new UserService(
+          new UserRepository(),
+          new EncryptService(),
+          new AdminRepository(new EncryptService())
+        ),
         new SpecialtyRepository()
       )
     )
@@ -139,7 +170,7 @@ export class ClinicalCaseController {
   @HttpCode(200)
   @Get('/open/current-user')
   public getOpenCurrentUser(
-    @QueryParams() { page, size }: PaginationQuery,
+    @QueryParams() { page, size, query }: ClinicalCaseSearchDto,
     @CurrentUser() user: FindUser
   ) {
     if (user.userType === 'rural professional') {
@@ -147,7 +178,8 @@ export class ClinicalCaseController {
         page,
         size,
         false,
-        user.document
+        user.document,
+        query
       )
     }
 
@@ -155,13 +187,32 @@ export class ClinicalCaseController {
       return this._specialistMentorsClinicalCaseService.getOpenPaginatedFindCases(
         page,
         size,
-        user.document
+        user.document,
+        query
       )
     }
 
     throw new UnprocessableContentError(
       'Solo los profesionales rurales y especialistas pueden acceder a sus casos clínicos.'
     )
+  }
+
+  @HttpCode(200)
+  @Get('/open/current-admin')
+  public getOpenCurrentAdmin(
+    @QueryParams() { page, size, query }: ClinicalCaseSearchDto,
+    @CurrentUser() user: FindAdmin
+  ) {
+    return this._clinicalCaseService.getPaginatedOpenCases(page, size, query, user.email)
+  }
+
+  @HttpCode(200)
+  @Get('/closed/current-admin')
+  public getClosedCurrentAdmin(
+    @QueryParams() { page, size, query }: ClinicalCaseSearchDto,
+    @CurrentUser() user: FindAdmin
+  ) {
+    return this._clinicalCaseService.getPaginatedClosedCases(page, size, query, user.email)
   }
 
   // @HttpCode(200)
@@ -195,23 +246,24 @@ export class ClinicalCaseController {
   @HttpCode(200)
   @Get('/open/required-current-specialist')
   public async getRequiredCurrentSpecialist(
-    @QueryParams() { page, size }: PaginationQuery,
+    @QueryParams() { page, size, query }: ClinicalCaseSearchDto,
     @CurrentUser() { document }: FindUser
   ) {
     return this._clinicalCaseService.getPaginatedRequiredSpecialistClinicalCases(
       page,
       size,
-      document
+      document,
+      query
     )
   }
 
   @HttpCode(200)
   @Get('/closed/current-user-record')
   public getPaginatedCurrentUserRecord(
-    @QueryParams() { page, size }: PaginationQuery,
+    @QueryParams() { page, size, query }: ClinicalCaseSearchDto,
     @CurrentUser() user: FindUser
   ) {
-    return this._clinicalCasesRecordService.getPaginatedRecord(page, size, user)
+    return this._clinicalCasesRecordService.getPaginatedRecord(page, size, user, query)
   }
 
   @HttpCode(200)
@@ -224,6 +276,12 @@ export class ClinicalCaseController {
   @Get('/all')
   public getAll() {
     return this._clinicalCaseService.getAllClinicalCases()
+  }
+
+  @HttpCode(200)
+  @Get('/library')
+  public getLibrary(@QueryParams() { page, size, query }: ClinicalCaseSearchDto) {
+    return this._clinicalCaseService.getPaginatedPublicClinicalCases(page, size, query)
   }
 
   @HttpCode(200)

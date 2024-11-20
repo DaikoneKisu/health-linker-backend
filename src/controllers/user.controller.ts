@@ -33,7 +33,7 @@ export class UserController {
   private readonly _userService: UserService = new UserService(
     new UserRepository(),
     new EncryptService(),
-    new AdminRepository()
+    new AdminRepository(new EncryptService())
   )
   private readonly _ruralProfessionalService: RuralProfessionalService =
     new RuralProfessionalService(new RuralProfessionalRepository(), this._userService)

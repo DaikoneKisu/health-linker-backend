@@ -25,6 +25,10 @@ export class RuralProfessionalService {
     return await this._ruralProfessionalRepository.findAll()
   }
 
+  public async getAllRuralsAdmin(query = '') {
+    return await this._ruralProfessionalRepository.findAllAdmin(query)
+  }
+
   public async getRuralProfessional(document: RuralProfessional['document']) {
     return await this._ruralProfessionalRepository.find(document)
   }

@@ -57,6 +57,7 @@ export class UserService {
       document: createUserDto.document,
       email: createUserDto.email,
       fullName: createUserDto.fullName,
+      phoneNumber: createUserDto.phoneNumber,
       password: await this._encryptService.encryptPassword(createUserDto.password),
       userType: createUserDto.userType
     }
@@ -79,7 +80,7 @@ export class UserService {
       }
     }
 
-    for (const key of ['email', 'fullName', 'password'] as const) {
+    for (const key of ['email', 'fullName', 'phoneNumber', 'password'] as const) {
       if (!updateUserDto[key]) {
         continue
       }

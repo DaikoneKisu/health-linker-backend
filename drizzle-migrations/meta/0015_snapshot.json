@@ -1,6 +1,8 @@
 {
-  "id": "da6ab520-eb64-4a66-837f-fd16608394f9",
-  "prevId": "0f2a0e20-3284-42bb-bb3f-2268353583a5",
+
+  "id": "1fc2171f-84bd-44f1-b44f-37acd05c4901",
+  "prevId": "d6c88410-ce41-4ea0-9566-eb75c3c36fc7",
+
   "version": "6",
   "dialect": "postgresql",
   "tables": {
@@ -46,6 +48,60 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+
+    "public.chat_rooms": {
+      "name": "chat_rooms",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "room_name": {
+          "name": "room_name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "owner_document": {
+          "name": "owner_document",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp (6) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp (6) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "chat_rooms_owner_document_users_document_fk": {
+          "name": "chat_rooms_owner_document_users_document_fk",
+          "tableFrom": "chat_rooms",
+          "tableTo": "users",
+          "columnsFrom": ["owner_document"],
+          "columnsTo": ["document"],
+          "onDelete": "restrict",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+
     "public.clinical_cases_feedbacks": {
       "name": "clinical_cases_feedbacks",
       "schema": "",
@@ -256,12 +312,14 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+
         },
         "errased_at": {
           "name": "errased_at",
           "type": "timestamp (6) with time zone",
           "primaryKey": false,
           "notNull": false
+
         }
       },
       "indexes": {},
@@ -519,6 +577,14 @@
           "primaryKey": false,
           "notNull": true
         },
+
+        "phone_number": {
+          "name": "phone_number",
+          "type": "varchar(15)",
+          "primaryKey": false,
+          "notNull": true
+        },
+
         "is_verified": {
           "name": "is_verified",
           "type": "boolean",

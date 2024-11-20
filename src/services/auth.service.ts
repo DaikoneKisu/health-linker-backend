@@ -10,6 +10,7 @@ import { CreateRuralProfessionalDto } from '@/dtos/rural-professional.dto'
 import { EXPIRES_IN, SECRET_KEY } from '@/config/env'
 import { SpecialistService } from './specialist.service'
 import { CreateSpecialistDto } from '@/dtos/specialist.dto'
+import { FindAdmin } from '@/types/admin.type'
 
 export class AuthService {
   private readonly _userService: UserService
@@ -45,7 +46,7 @@ export class AuthService {
     return 'Usuario registrado con éxito.'
   }
 
-  public async signIn(document: User['document'], password: string): Promise<string | undefined> {
+  public async signIn(document: User['document'], password: string) {
     const user = await this._userService.getUser(document)
 
     if (!user) {
@@ -65,7 +66,7 @@ export class AuthService {
       throw new UnauthorizedError('La contraseña provista es incorrecta.')
     }
 
-    return this.tokenize(user)
+    return { token: this.tokenize(user), type: user.userType }
   }
 
   private tokenize(user: FindUser): string {
@@ -76,7 +77,7 @@ export class AuthService {
     })
   }
 
-  public verify(token?: string): FindUser | undefined {
+  public verify(token?: string): FindAdmin | FindUser | undefined {
     if (token == null) {
       return
     }
@@ -88,7 +89,7 @@ export class AuthService {
     }
 
     try {
-      return verify(extractedToken, SECRET_KEY, { algorithms: ['HS256'] }) as FindUser
+      return verify(extractedToken, SECRET_KEY, { algorithms: ['HS256'] }) as FindAdmin | FindUser
     } catch (_e: unknown) {
       return
     }
