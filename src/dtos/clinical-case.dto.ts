@@ -12,13 +12,13 @@ import { Gender, GenderArray } from '@/types/gender.type'
 import { DateBeforeNow } from '@/utils/date-before-now'
 
 export class CreateClinicalCaseDto {
-  @Length(1, 500, {
+  @Length(1, 800, {
     message: 'La descripción debe tener entre $constraint1 y $constraint2 caracteres.'
   })
   @IsString()
   public description: string
 
-  @Length(1, 500, {
+  @Length(1, 800, {
     message: 'El motivo debe tener entre $constraint1 y $constraint2 caracteres.'
   })
   @IsString()
@@ -34,13 +34,13 @@ export class CreateClinicalCaseDto {
   @IsString()
   public patientGender: Gender
 
-  @Length(1, 500, {
+  @Length(1, 800, {
     message: 'El motivo del paciente debe tener entre $constraint1 y $constraint2 caracteres.'
   })
   @IsString()
   public patientReason: string
 
-  @Length(1, 500, {
+  @Length(1, 800, {
     message: 'La valoración del paciente debe tener entre $constraint1 y $constraint2 caracteres.'
   })
   @IsString()
@@ -70,14 +70,14 @@ export class CreateClinicalCaseDto {
 }
 
 export class UpdateClinicalCaseDto {
-  @Length(1, 500, {
+  @Length(1, 800, {
     message: 'La descripción debe tener entre $constraint1 y $constraint2 caracteres.'
   })
   @IsString()
   @IsOptional()
   public description?: string
 
-  @Length(1, 500, {
+  @Length(1, 800, {
     message: 'El motivo debe tener entre $constraint1 y $constraint2 caracteres.'
   })
   @IsString()
@@ -96,14 +96,14 @@ export class UpdateClinicalCaseDto {
   @IsOptional()
   public patientGender?: Gender
 
-  @Length(1, 500, {
+  @Length(1, 800, {
     message: 'El motivo del paciente debe tener entre $constraint1 y $constraint2 caracteres.'
   })
   @IsString()
   @IsOptional()
   public patientReason?: string
 
-  @Length(1, 500, {
+  @Length(1, 800, {
     message: 'La valoración del paciente debe tener entre $constraint1 y $constraint2 caracteres.'
   })
   @IsString()
