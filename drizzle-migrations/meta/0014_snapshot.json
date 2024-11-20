@@ -1,5 +1,7 @@
 {
+
   "id": "d6c88410-ce41-4ea0-9566-eb75c3c36fc7",
+
   "prevId": "5a045901-3feb-4562-948c-592ad9937164",
   "version": "6",
   "dialect": "postgresql",
@@ -256,6 +258,14 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+
+        },
+        "fecha_borrado": {
+          "name": "fecha_borrado",
+          "type": "timestamp (6) with time zone",
+          "primaryKey": false,
+          "notNull": false
+
         }
       },
       "indexes": {},
@@ -513,12 +523,14 @@
           "primaryKey": false,
           "notNull": true
         },
+
         "phone_number": {
           "name": "phone_number",
           "type": "varchar(15)",
           "primaryKey": false,
           "notNull": true
         },
+
         "is_verified": {
           "name": "is_verified",
           "type": "boolean",

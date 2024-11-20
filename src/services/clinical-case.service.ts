@@ -428,6 +428,7 @@ export class ClinicalCaseService {
   }
 
   public async deleteClinicalCase(id: ClinicalCase['id']) {
-    return await this._clinicalCaseRepository.delete(id)
+    const currentDate = new Date()
+    return await this._clinicalCaseRepository.update(id, { errasedAt: currentDate })
   }
 }

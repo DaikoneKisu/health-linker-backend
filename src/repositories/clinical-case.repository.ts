@@ -1,4 +1,6 @@
-import { eq, and, like, or, desc } from 'drizzle-orm'
+
+import { eq, and, , isNull, sql, like, or, desc } from 'drizzle-orm'
+
 import { PgDatabase } from '@/types/pg-database.type'
 import { pgDatabase } from '@/pg-database'
 import { clinicalCaseModel } from '@/models/clinical-case.model'
@@ -169,7 +171,8 @@ export class ClinicalCaseRepository {
       .where(
         and(
           eq(clinicalCaseModel.isClosed, isClosed),
-          eq(clinicalCaseModel.ruralProfessionalDocument, ruralProfessionalDocument)
+          eq(clinicalCaseModel.ruralProfessionalDocument, ruralProfessionalDocument),
+          isNull(clinicalCaseModel.errasedAt)
         )
       )
 
@@ -195,18 +198,26 @@ export class ClinicalCaseRepository {
         patientReason: clinicalCaseModel.patientReason,
         patientAssessment: clinicalCaseModel.patientAssessment,
         requiredSpecialtyId: clinicalCaseModel.requiredSpecialtyId,
-        ruralProfessionalDocument: clinicalCaseModel.ruralProfessionalDocument
+        ruralProfessionalDocument: clinicalCaseModel.ruralProfessionalDocument,
+        editable:
+          sql`CASE WHEN (NOW() - ${clinicalCaseModel.createdAt}) < INTERVAL '30 minutes' THEN true ELSE false END`.as(
+            'editable'
+          )
       })
       .from(clinicalCaseModel)
       .where(
         and(
           eq(clinicalCaseModel.isClosed, isClosed),
           eq(clinicalCaseModel.ruralProfessionalDocument, ruralProfessionalDocument),
+
+          isNull(clinicalCaseModel.errasedAt),
+
           or(
             like(clinicalCaseModel.patientReason, `%${query}%`),
             like(clinicalCaseModel.patientAssessment, `%${query}%`),
             like(clinicalCaseModel.description, `%${query}%`)
           )
+
         )
       )
       .limit(limit)
