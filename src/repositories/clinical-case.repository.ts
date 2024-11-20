@@ -1,5 +1,4 @@
-
-import { eq, and, , isNull, sql, like, or, desc } from 'drizzle-orm'
+import { eq, and, isNull, sql, like, or, desc } from 'drizzle-orm'
 
 import { PgDatabase } from '@/types/pg-database.type'
 import { pgDatabase } from '@/pg-database'
@@ -217,7 +216,6 @@ export class ClinicalCaseRepository {
             like(clinicalCaseModel.patientAssessment, `%${query}%`),
             like(clinicalCaseModel.description, `%${query}%`)
           )
-
         )
       )
       .limit(limit)
