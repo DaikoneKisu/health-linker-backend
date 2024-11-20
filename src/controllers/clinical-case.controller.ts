@@ -35,6 +35,7 @@ import { plainToClass } from 'class-transformer'
 import { CreateSpecialistMentorsClinicalCaseDto } from '@/dtos/specialist-mentors-clinical-case.dto'
 import { validateSync } from 'class-validator'
 import { UnprocessableContentError } from '@/exceptions/unprocessable-content-error'
+import { NotificationService } from '@/services/notification.service'
 
 @JsonController('/clinical-cases')
 export class ClinicalCaseController {
@@ -51,6 +52,7 @@ export class ClinicalCaseController {
       new SpecialtyRepository()
     )
   )
+  private readonly _notificationService: NotificationService = new NotificationService()
   private readonly _specialistMentorsClinicalCaseService: SpecialistMentorsClinicalCaseService =
     new SpecialistMentorsClinicalCaseService(
       new SpecialistMentorsClinicalCaseRepository(),
@@ -233,11 +235,19 @@ export class ClinicalCaseController {
 
   @HttpCode(201)
   @Post()
-  public create(
+  public async create(
     @Body() createClinicalCaseDto: CreateClinicalCaseDto,
-    @CurrentUser() { document }: FindUser
+    @CurrentUser() { document, email }: FindUser
   ) {
-    return this._clinicalCaseService.createClinicalCase(createClinicalCaseDto, document)
+    const clinicalCase = this._clinicalCaseService.createClinicalCase(
+      createClinicalCaseDto,
+      document
+    )
+    await this._notificationService.sendSms(
+      email,
+      'Your clinical case has been created successfully.'
+    )
+    return clinicalCase
   }
 
   @HttpCode(201)
