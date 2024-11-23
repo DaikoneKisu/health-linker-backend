@@ -313,7 +313,8 @@ export class ClinicalCaseRepository {
             like(clinicalCaseModel.patientAssessment, `%${query}%`),
             like(clinicalCaseModel.patientReason, `%${query}%`),
             like(clinicalCaseModel.description, `%${query}%`)
-          )
+          ),
+          isNull(clinicalCaseModel.errasedAt)
         )
       )
       .limit(limit)
