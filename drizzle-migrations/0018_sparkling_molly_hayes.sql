@@ -1,0 +1,1 @@
+ALTER TABLE "clinical_cases" ADD COLUMN "errased_at" timestamp (6) with time zone;
