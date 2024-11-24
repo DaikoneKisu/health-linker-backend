@@ -8,7 +8,7 @@ import {
 import { ClinicalCaseService } from './clinical-case.service'
 import { SpecialistService } from './specialist.service'
 import { UnprocessableContentError } from '@/exceptions/unprocessable-content-error'
-import { ClinicalCase, FindClinicalCase } from '@/types/clinical-case.type'
+import { type ClinicalCase } from '@/types/clinical-case.type'
 import { Specialist } from '@/types/specialist.type'
 
 export class SpecialistMentorsClinicalCaseService {
@@ -104,7 +104,7 @@ export class SpecialistMentorsClinicalCaseService {
       return []
     }
 
-    const clinicalCases: FindClinicalCase[] = []
+    const clinicalCases = []
 
     for (const mentoredCase of mentoredCases) {
       const clinicalCase = await this._clinicalCaseService.getClinicalCase(
@@ -146,7 +146,7 @@ export class SpecialistMentorsClinicalCaseService {
       return []
     }
 
-    const openMentoredFindClinicalCases: FindClinicalCase[] = []
+    const openMentoredFindClinicalCases = []
 
     for (const clinicalCase of clinicalCases) {
       for (const mentoredCase of mentoredCases) {
@@ -187,7 +187,7 @@ export class SpecialistMentorsClinicalCaseService {
       return []
     }
 
-    const closedMentoredFindClinicalCases: FindClinicalCase[] = []
+    const closedMentoredFindClinicalCases = []
 
     for (const clinicalCase of clinicalCases) {
       for (const mentoredCase of mentoredCases) {

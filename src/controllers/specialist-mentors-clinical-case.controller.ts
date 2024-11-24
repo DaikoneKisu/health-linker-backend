@@ -23,6 +23,7 @@ import { SpecialistMentorsClinicalCaseService } from '@/services/specialist-ment
 import { SpecialistService } from '@/services/specialist.service'
 import { UserService } from '@/services/user.service'
 import { Specialist } from '@/types/specialist.type'
+import { AdminService } from '@/services/admin.service'
 
 @JsonController('/specialist-mentors-clinical-cases')
 export class SpecialistMentorsClinicalCaseController {
@@ -42,6 +43,11 @@ export class SpecialistMentorsClinicalCaseController {
           new SpecialistRepository(),
           this._userService,
           new SpecialtyRepository()
+        ),
+        new AdminService(
+          new AdminRepository(new EncryptService()),
+          new EncryptService(),
+          new UserRepository()
         )
       ),
       new SpecialistService(
