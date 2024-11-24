@@ -127,13 +127,6 @@
       "when": 1731887013116,
       "tag": "0017_thankful_the_hand",
       "breakpoints": true
-    },
-    {
-      "idx": 18,
-      "version": "6",
-      "when": 1732136401949,
-      "tag": "0018_sleepy_lizard",
-      "breakpoints": true
     }
   ]
 }
