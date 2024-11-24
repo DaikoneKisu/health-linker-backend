@@ -1,5 +1,4 @@
 import { eq, and, isNull, sql, like, or, desc } from 'drizzle-orm'
-
 import { PgDatabase } from '@/types/pg-database.type'
 import { pgDatabase } from '@/pg-database'
 import { clinicalCaseModel } from '@/models/clinical-case.model'
@@ -203,9 +202,7 @@ export class ClinicalCaseRepository {
         and(
           eq(clinicalCaseModel.isClosed, isClosed),
           eq(clinicalCaseModel.ruralProfessionalDocument, ruralProfessionalDocument),
-
           isNull(clinicalCaseModel.errasedAt),
-
           or(
             like(clinicalCaseModel.patientReason, `%${query}%`),
             like(clinicalCaseModel.patientAssessment, `%${query}%`),
