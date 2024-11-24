@@ -4,7 +4,6 @@ import { SpecialistMentorsClinicalCaseService } from './specialist-mentors-clini
 import { RuralProfessionalService } from './rural-professional.service'
 import { SpecialistService } from './specialist.service'
 import { UnprocessableContentError } from '@/exceptions/unprocessable-content-error'
-import { FindClinicalCase } from '@/types/clinical-case.type'
 
 export class ClinicalCasesRecordService {
   private readonly _clinicalCaseService: ClinicalCaseService
@@ -55,7 +54,7 @@ export class ClinicalCasesRecordService {
         return []
       }
 
-      const closedClinicalCases: FindClinicalCase[] = []
+      const closedClinicalCases = []
 
       for (const mentoredCase of mentoredCases) {
         const clinicalCase = await this._clinicalCaseService.getClinicalCase(
@@ -77,7 +76,7 @@ export class ClinicalCasesRecordService {
     )
   }
 
-  public async getPaginatedRecord(page: number = 1, size: number = 10, user: FindUser) {
+  public async getPaginatedRecord(page: number = 1, size: number = 10, user: FindUser, query = '') {
     if (user.userType === 'rural professional') {
       const ruralProfessional = await this._ruralProfessionalService.getRuralProfessional(
         user.document
@@ -91,7 +90,8 @@ export class ClinicalCasesRecordService {
         page,
         size,
         true,
-        ruralProfessional.document
+        ruralProfessional.document,
+        query
       )
     }
 

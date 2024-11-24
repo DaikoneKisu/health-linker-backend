@@ -6,31 +6,36 @@ import { SpecialistService } from './specialist.service'
 import { CreateClinicalCaseDto, UpdateClinicalCaseDto } from '@/dtos/clinical-case.dto'
 import { ClinicalCase, NewClinicalCase, UpdateClinicalCase } from '@/types/clinical-case.type'
 import { UnprocessableContentError } from '@/exceptions/unprocessable-content-error'
-import { InternalServerError, NotFoundError } from 'routing-controllers'
+import { InternalServerError, NotFoundError, UnauthorizedError } from 'routing-controllers'
 import { RuralProfessional } from '@/types/rural-professional.type'
 import { FindUser } from '@/types/find-user.type'
 import { Specialist } from '@/types/specialist.type'
+import { FindAdmin } from '@/types/admin.type'
+import { AdminService } from './admin.service'
 
 export class ClinicalCaseService {
   private readonly _clinicalCaseRepository: ClinicalCaseRepository
   private readonly _ruralProfessionalService: RuralProfessionalService
   private readonly _specialtyRepository: SpecialtyRepository
   private readonly _specialistService: SpecialistService
+  private readonly _adminService: AdminService
 
   constructor(
     clinicalCaseRepository: ClinicalCaseRepository,
     ruralProfessionalService: RuralProfessionalService,
     specialtyRepository: SpecialtyRepository,
-    specialistService: SpecialistService
+    specialistService: SpecialistService,
+    adminService: AdminService
   ) {
     this._clinicalCaseRepository = clinicalCaseRepository
     this._ruralProfessionalService = ruralProfessionalService
     this._specialtyRepository = specialtyRepository
     this._specialistService = specialistService
+    this._adminService = adminService
   }
 
-  public async getAllClinicalCases() {
-    return await this._clinicalCaseRepository.findAll()
+  public async getAllClinicalCases(query = '') {
+    return await this._clinicalCaseRepository.findAll(query)
   }
 
   public async getClinicalCase(id: ClinicalCase['id']) {
@@ -58,6 +63,31 @@ export class ClinicalCaseService {
     return await this._clinicalCaseRepository.findWithLimitAndOffset(size, page - 1)
   }
 
+  public async getPaginatedOpenCases(page = 1, size = 100, query = '', email: FindAdmin['email']) {
+    // Validate admin
+    const admin = await this._adminService.getAdmin(email)
+    if (!admin) {
+      throw new UnauthorizedError('No tiene permisos para esta acción.')
+    }
+
+    return await this._clinicalCaseRepository.findOpenWithLimitAndOffset(page - 1, size, query)
+  }
+
+  public async getPaginatedClosedCases(
+    page = 1,
+    size = 100,
+    query = '',
+    email: FindAdmin['email']
+  ) {
+    // Validate admin
+    const admin = await this._adminService.getAdmin(email)
+    if (!admin) {
+      throw new UnauthorizedError('No tiene permisos para esta acción.')
+    }
+
+    return await this._clinicalCaseRepository.findClosedWithLimitAndOffset(page - 1, size, query)
+  }
+
   public async getPaginatedRecordClinicalCases(
     page: number = 1,
     size: number = 10,
@@ -76,7 +106,8 @@ export class ClinicalCaseService {
         size,
         page - 1,
         true,
-        ruralProfessional.document
+        ruralProfessional.document,
+        ''
       )
     }
 
@@ -89,8 +120,13 @@ export class ClinicalCaseService {
     )
   }
 
-  public async getPaginatedPublicClinicalCases(page: number = 1, size: number = 10) {
-    return await this._clinicalCaseRepository.findByIsPublicWithLimitAndOffset(size, page - 1, true)
+  public async getPaginatedPublicClinicalCases(page = 1, size = 100, query = '') {
+    return await this._clinicalCaseRepository.findByIsPublicWithLimitAndOffset(
+      size,
+      page - 1,
+      true,
+      query
+    )
   }
 
   public async getPaginatedRuralProfessionalClinicalCases(
@@ -116,7 +152,8 @@ export class ClinicalCaseService {
     page: number = 1,
     size: number = 10,
     closed: ClinicalCase['isClosed'],
-    ruralProfessionalDocument: RuralProfessional['document']
+    ruralProfessionalDocument: RuralProfessional['document'],
+    query = ''
   ) {
     const ruralProfessional =
       await this._ruralProfessionalService.getRuralProfessional(ruralProfessionalDocument)
@@ -129,14 +166,16 @@ export class ClinicalCaseService {
       size,
       page - 1,
       closed,
-      ruralProfessional.document
+      ruralProfessional.document,
+      query
     )
   }
 
   public async getPaginatedRequiredSpecialistClinicalCases(
     page: number = 1,
     size: number = 10,
-    specialistDocument: Specialist['document']
+    specialistDocument: Specialist['document'],
+    query = ''
   ) {
     const specialist = await this._specialistService.getSpecialist(specialistDocument)
 
@@ -148,7 +187,8 @@ export class ClinicalCaseService {
       size,
       page - 1,
       false,
-      specialist.specialtyId
+      specialist.specialtyId,
+      query
     )
   }
 
@@ -388,6 +428,7 @@ export class ClinicalCaseService {
   }
 
   public async deleteClinicalCase(id: ClinicalCase['id']) {
-    return await this._clinicalCaseRepository.delete(id)
+    const currentDate = new Date()
+    return await this._clinicalCaseRepository.update(id, { errasedAt: currentDate })
   }
 }

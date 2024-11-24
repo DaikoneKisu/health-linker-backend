@@ -56,6 +56,9 @@
     "typescript-eslint": "^7.9.0"
   },
   "dependencies": {
+    "@nestjs/common": "^10.4.8",
+    "@nestjs/core": "^10.4.8",
+    "@nestjs/platform-express": "^10.4.8",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "class-transformer": "^0.5.1",
@@ -78,7 +81,9 @@
     "reflect-metadata": "^0.2.2",
     "routing-controllers": "^0.10.4",
     "routing-controllers-openapi": "^4.0.0",
-    "swagger-ui-express": "^5.0.1"
+    "socket.io": "^4.8.1",
+    "swagger-ui-express": "^5.0.1",
+    "twilio": "^5.3.6"
   },
   "packageManager": "pnpm@9.1.2+sha512.127dc83b9ea10c32be65d22a8efb4a65fb952e8fefbdfded39bdc3c97efc32d31b48b00420df2c1187ace28c921c902f0cb5a134a4d032b8b5295cbfa2c681e2"
 }

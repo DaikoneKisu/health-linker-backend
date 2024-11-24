@@ -8,7 +8,7 @@ import {
 import { ClinicalCaseService } from './clinical-case.service'
 import { SpecialistService } from './specialist.service'
 import { UnprocessableContentError } from '@/exceptions/unprocessable-content-error'
-import { ClinicalCase, FindClinicalCase } from '@/types/clinical-case.type'
+import { type ClinicalCase } from '@/types/clinical-case.type'
 import { Specialist } from '@/types/specialist.type'
 
 export class SpecialistMentorsClinicalCaseService {
@@ -104,7 +104,7 @@ export class SpecialistMentorsClinicalCaseService {
       return []
     }
 
-    const clinicalCases: FindClinicalCase[] = []
+    const clinicalCases = []
 
     for (const mentoredCase of mentoredCases) {
       const clinicalCase = await this._clinicalCaseService.getClinicalCase(
@@ -124,7 +124,8 @@ export class SpecialistMentorsClinicalCaseService {
   public async getOpenPaginatedFindCases(
     page: number = 1,
     size: number = 10,
-    specialistDocument: Specialist['document']
+    specialistDocument: Specialist['document'],
+    query = ''
   ) {
     const specialist = await this._specialistService.getSpecialist(specialistDocument)
 
@@ -132,7 +133,7 @@ export class SpecialistMentorsClinicalCaseService {
       throw new UnprocessableContentError('El especialista proveído no existe.')
     }
 
-    const clinicalCases = await this._clinicalCaseService.getAllClinicalCases()
+    const clinicalCases = await this._clinicalCaseService.getAllClinicalCases(query)
 
     const mentoredCases =
       await this._specialistMentorsClinicalCaseRepository.findManyBySpecialistWithLimitAndOffset(
@@ -145,7 +146,7 @@ export class SpecialistMentorsClinicalCaseService {
       return []
     }
 
-    const openMentoredFindClinicalCases: FindClinicalCase[] = []
+    const openMentoredFindClinicalCases = []
 
     for (const clinicalCase of clinicalCases) {
       for (const mentoredCase of mentoredCases) {
@@ -186,7 +187,7 @@ export class SpecialistMentorsClinicalCaseService {
       return []
     }
 
-    const closedMentoredFindClinicalCases: FindClinicalCase[] = []
+    const closedMentoredFindClinicalCases = []
 
     for (const clinicalCase of clinicalCases) {
       for (const mentoredCase of mentoredCases) {

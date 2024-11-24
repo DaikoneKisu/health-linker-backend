@@ -28,24 +28,42 @@ import { SpecialistService } from '@/services/specialist.service'
 import { SpecialistRepository } from '@/repositories/specialist.repository'
 import { SpecialistMentorsClinicalCaseService } from '@/services/specialist-mentors-clinical-case.service'
 import { SpecialistMentorsClinicalCaseRepository } from '@/repositories/specialist-mentors-clinical-case.repository'
+import { AdminService } from '@/services/admin.service'
 
 @JsonController('/clinical-cases-feedbacks')
 export class ClinicalCaseFeedbackController {
   private readonly _clinicalCaseFeedbackService: ClinicalCaseFeedbackService =
     new ClinicalCaseFeedbackService(
       new ClinicalCaseFeedbackRepository(),
-      new UserService(new UserRepository(), new EncryptService(), new AdminRepository()),
+      new UserService(
+        new UserRepository(),
+        new EncryptService(),
+        new AdminRepository(new EncryptService())
+      ),
       new ClinicalCaseService(
         new ClinicalCaseRepository(),
         new RuralProfessionalService(
           new RuralProfessionalRepository(),
-          new UserService(new UserRepository(), new EncryptService(), new AdminRepository())
+          new UserService(
+            new UserRepository(),
+            new EncryptService(),
+            new AdminRepository(new EncryptService())
+          )
         ),
         new SpecialtyRepository(),
         new SpecialistService(
           new SpecialistRepository(),
-          new UserService(new UserRepository(), new EncryptService(), new AdminRepository()),
+          new UserService(
+            new UserRepository(),
+            new EncryptService(),
+            new AdminRepository(new EncryptService())
+          ),
           new SpecialtyRepository()
+        ),
+        new AdminService(
+          new AdminRepository(new EncryptService()),
+          new EncryptService(),
+          new UserRepository()
         )
       ),
       new SpecialistMentorsClinicalCaseService(
@@ -54,18 +72,35 @@ export class ClinicalCaseFeedbackController {
           new ClinicalCaseRepository(),
           new RuralProfessionalService(
             new RuralProfessionalRepository(),
-            new UserService(new UserRepository(), new EncryptService(), new AdminRepository())
+            new UserService(
+              new UserRepository(),
+              new EncryptService(),
+              new AdminRepository(new EncryptService())
+            )
           ),
           new SpecialtyRepository(),
           new SpecialistService(
             new SpecialistRepository(),
-            new UserService(new UserRepository(), new EncryptService(), new AdminRepository()),
+            new UserService(
+              new UserRepository(),
+              new EncryptService(),
+              new AdminRepository(new EncryptService())
+            ),
             new SpecialtyRepository()
+          ),
+          new AdminService(
+            new AdminRepository(new EncryptService()),
+            new EncryptService(),
+            new UserRepository()
           )
         ),
         new SpecialistService(
           new SpecialistRepository(),
-          new UserService(new UserRepository(), new EncryptService(), new AdminRepository()),
+          new UserService(
+            new UserRepository(),
+            new EncryptService(),
+            new AdminRepository(new EncryptService())
+          ),
           new SpecialtyRepository()
         )
       )
