@@ -11,7 +11,7 @@ import {
 } from 'routing-controllers'
 import { acceptedFileFormats, fileUploadOptions } from '@/config/multer'
 import { File } from '@/types/file.type'
-import { DOMAIN, PUBLIC_PATH } from '@/config/env'
+import { DOMAIN, PUBLIC_PATH, PORT } from '@/config/env'
 import { ChatMessageService } from '@/services/chat-message.service'
 import { ChatMessageRepository } from '@/repositories/chat-message.repository'
 import { ChatMessageQuery } from '@/dtos/chat-message-query.dto'
@@ -50,6 +50,6 @@ export class ChatMessageController {
       )
     }
 
-    return { fileName: `${DOMAIN}/${PUBLIC_PATH}/${file.filename}` }
+    return { fileName: `${DOMAIN}:${PORT}/${PUBLIC_PATH}/${file.filename}` }
   }
 }
