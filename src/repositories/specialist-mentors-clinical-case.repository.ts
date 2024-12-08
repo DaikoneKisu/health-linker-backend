@@ -8,6 +8,7 @@ import {
   SpecialistMentorsClinicalCase,
   UpdateSpecialistMentorsClinicalCase
 } from '@/types/specialist-mentors-clinical-case.type'
+import { ClinicalCase } from '@/types/clinical-case.type'
 
 export class SpecialistMentorsClinicalCaseRepository {
   private readonly _db: PgDatabase = pgDatabase
@@ -135,5 +136,17 @@ export class SpecialistMentorsClinicalCaseRepository {
       })
 
     return rows.at(0)
+  }
+
+  public async deleteAllFromCase(clinicalCaseId: ClinicalCase['id']) {
+    const rows = await this._db
+      .delete(specialistMentorsClinicalCaseModel)
+      .where(eq(specialistMentorsClinicalCaseModel.clinicalCaseId, clinicalCaseId))
+      .returning({
+        clinicalCaseId: specialistMentorsClinicalCaseModel.clinicalCaseId,
+        specialistDocument: specialistMentorsClinicalCaseModel.specialistDocument
+      })
+
+    return rows
   }
 }

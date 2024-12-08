@@ -259,4 +259,8 @@ export class SpecialistMentorsClinicalCaseService {
       specialistDocument
     )
   }
+
+  public async deleteAllFromCase(clinicalCaseId: ClinicalCase['id']) {
+    return await this._specialistMentorsClinicalCaseRepository.deleteAllFromCase(clinicalCaseId)
+  }
 }
