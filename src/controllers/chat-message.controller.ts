@@ -28,7 +28,7 @@ export class ChatMessageController {
     return this._chatMessageService.getPaginatedChatMessages(
       paginationQuery.page,
       paginationQuery.size,
-      paginationQuery.roomId
+      paginationQuery.caseId
     )
   }
 

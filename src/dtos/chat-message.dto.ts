@@ -3,7 +3,7 @@ import { IsIn, IsInt, IsPositive, IsString } from 'class-validator'
 export class CreateChatMessageDto {
   @IsPositive()
   @IsInt()
-  public roomId: number
+  public caseId: number
 
   @IsString()
   public content: string
@@ -12,8 +12,8 @@ export class CreateChatMessageDto {
   @IsString()
   public messageType: 'text' | 'image' | 'audio'
 
-  constructor(roomId: number, content: string, messageType: 'text' | 'image' | 'audio') {
-    this.roomId = roomId
+  constructor(caseId: number, content: string, messageType: 'text' | 'image' | 'audio') {
+    this.caseId = caseId
     this.content = content
     this.messageType = messageType
   }

@@ -10,9 +10,9 @@ export class ChatMessageService {
     this._chatMessageRepository = chatMessageRepository
   }
 
-  public async getPaginatedChatMessages(page: number = 1, size: number = 20, roomId: number) {
+  public async getPaginatedChatMessages(page: number = 1, size: number = 20, caseId: number) {
     return (
-      await this._chatMessageRepository.findWithLimitAndOffset(size, page - 1, roomId)
+      await this._chatMessageRepository.findWithLimitAndOffset(size, page - 1, caseId)
     ).reverse()
   }
 
@@ -21,7 +21,7 @@ export class ChatMessageService {
     senderDocument: User['document']
   ) {
     const result = await this._chatMessageRepository.create({
-      roomId: createChatMessageDto.roomId,
+      caseId: createChatMessageDto.caseId,
       content: createChatMessageDto.content,
       messageType: createChatMessageDto.messageType,
       senderDocument
@@ -29,7 +29,7 @@ export class ChatMessageService {
 
     if (result) {
       // Notify through server socket
-      app.socketProvider.sendMessage(`new-message-${createChatMessageDto.roomId}`, result)
+      app.socketProvider.sendMessage(`new-message-${createChatMessageDto.caseId}`, result)
     }
 
     return result

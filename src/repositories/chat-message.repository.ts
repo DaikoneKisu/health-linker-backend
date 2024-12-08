@@ -12,9 +12,9 @@ export class ChatMessageRepository {
    * Get chat messages with pagination support
    * @param limit Amount of chat rooms to show
    * @param offset Offset from start
-   * @param roomId ID of the room to search in
+   * @param caseId ID of the case to search in
    */
-  public async findWithLimitAndOffset(limit: number, offset: number, roomId: number) {
+  public async findWithLimitAndOffset(limit: number, offset: number, caseId: number) {
     return await this._db
       .select({
         id: chatMessageModel.id,
@@ -25,7 +25,7 @@ export class ChatMessageRepository {
       })
       .from(chatMessageModel)
       .innerJoin(userModel, eq(userModel.document, chatMessageModel.senderDocument))
-      .where(eq(chatMessageModel.roomId, roomId))
+      .where(eq(chatMessageModel.caseId, caseId))
       .orderBy(desc(chatMessageModel.createdAt))
       .limit(limit)
       .offset(limit * offset)
