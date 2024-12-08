@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   JsonController,
+  OnUndefined,
   Post,
   QueryParams,
   UploadedFile
@@ -17,10 +18,16 @@ import { ChatMessageRepository } from '@/repositories/chat-message.repository'
 import { ChatMessageQuery } from '@/dtos/chat-message-query.dto'
 import { CreateChatMessageDto } from '@/dtos/chat-message.dto'
 import { FindUser } from '@/types/find-user.type'
+import { ClinicalCaseRepository } from '@/repositories/clinical-case.repository'
+import { SpecialistMentorsClinicalCaseRepository } from '@/repositories/specialist-mentors-clinical-case.repository'
 
 @JsonController('/chat-messages')
 export class ChatMessageController {
-  private readonly _chatMessageService = new ChatMessageService(new ChatMessageRepository())
+  private readonly _chatMessageService = new ChatMessageService(
+    new ChatMessageRepository(),
+    new ClinicalCaseRepository(),
+    new SpecialistMentorsClinicalCaseRepository()
+  )
 
   @HttpCode(200)
   @Get()
@@ -34,6 +41,7 @@ export class ChatMessageController {
 
   @HttpCode(201)
   @Post()
+  @OnUndefined(404)
   public createMessage(
     @Body() createMessageDto: CreateChatMessageDto,
     @CurrentUser() { document }: FindUser
