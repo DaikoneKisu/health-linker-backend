@@ -19,6 +19,7 @@ import { SpecialistService } from '@/services/specialist.service'
 import { UserService } from '@/services/user.service'
 import { Specialist } from '@/types/specialist.type'
 import { AllUsersSearchQuery } from '@/dtos/all-users-search-query.dto'
+import { Specialty } from '@/types/specialty.type'
 
 @JsonController('/specialists')
 export class SpecialistController {
@@ -51,6 +52,15 @@ export class SpecialistController {
   @Get('/all/admin')
   public getAllAdmin(@QueryParams() searchQuery: AllUsersSearchQuery) {
     return this._specialistService.getAllSpecialistsAdmin(searchQuery.query)
+  }
+
+  @HttpCode(200)
+  @Get('/all/speciality/:specialityId')
+  public getBySpeciality(
+    @QueryParams() searchQuery: AllUsersSearchQuery,
+    @Param('specialityId') specialityId: Specialty['id']
+  ) {
+    return this._specialistService.getAllSpecialistsBySpeciality(searchQuery.query, specialityId)
   }
 
   @HttpCode(200)

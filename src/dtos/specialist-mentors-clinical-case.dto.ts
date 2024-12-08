@@ -21,6 +21,21 @@ export class CreateSpecialistMentorsClinicalCaseDto implements NewSpecialistMent
   }
 }
 
+export class CreateSpecialistMentor {
+  @Length(10, 10, {
+    message: 'El documento debe tener exactamente 10 caracteres.'
+  })
+  @Matches(/^\d+$/, {
+    message: 'El documento debe contener solo números.'
+  })
+  @IsString()
+  specialistDocument: string
+
+  constructor(specialistDocument: string) {
+    this.specialistDocument = specialistDocument
+  }
+}
+
 export class PathSpecialistMentorsClinicalCaseDto {
   @IsPositive()
   @IsNumber()

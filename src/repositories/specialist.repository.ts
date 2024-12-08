@@ -1,4 +1,4 @@
-import { count, eq, like, or } from 'drizzle-orm'
+import { and, count, eq, like, or } from 'drizzle-orm'
 import { specialistModel } from '@/models/specialist.model'
 import { pgDatabase } from '@/pg-database'
 import { PgDatabase } from '@/types/pg-database.type'
@@ -55,6 +55,30 @@ export class SpecialistRepository {
           like(userModel.email, `%${query}%`),
           like(specialistModel.document, `%${query}%`),
           like(specialtyModel.name, `%${query}%`)
+        )
+      )
+  }
+
+  public async findBySpeciality(query: string, specialityId: number) {
+    return await this._db
+      .select({
+        fullName: userModel.fullName,
+        document: specialistModel.document,
+        speciality: specialtyModel.name,
+        email: userModel.email
+      })
+      .from(specialistModel)
+      .innerJoin(specialtyModel, eq(specialtyModel.id, specialistModel.specialtyId))
+      .innerJoin(userModel, eq(userModel.document, specialistModel.document))
+      .where(
+        and(
+          eq(specialistModel.specialtyId, specialityId),
+          or(
+            like(userModel.fullName, `%${query}%`),
+            like(userModel.email, `%${query}%`),
+            like(specialistModel.document, `%${query}%`),
+            like(specialtyModel.name, `%${query}%`)
+          )
         )
       )
   }
