@@ -40,8 +40,6 @@ import {
 import { validateSync } from 'class-validator'
 import { UnprocessableContentError } from '@/exceptions/unprocessable-content-error'
 
-import { NotificationService } from '@/services/notification.service'
-
 import { ClinicalCaseSearchDto } from '@/dtos/clinical-case-search.dto'
 import { FindAdmin } from '@/types/admin.type'
 import { AdminService } from '@/services/admin.service'
@@ -74,7 +72,6 @@ export class ClinicalCaseController {
       new UserRepository()
     )
   )
-  private readonly _notificationService: NotificationService = new NotificationService()
   private readonly _specialistMentorsClinicalCaseService: SpecialistMentorsClinicalCaseService =
     new SpecialistMentorsClinicalCaseService(
       new SpecialistMentorsClinicalCaseRepository(),
@@ -316,15 +313,11 @@ export class ClinicalCaseController {
   @Post()
   public async create(
     @Body() createClinicalCaseDto: CreateClinicalCaseDto,
-    @CurrentUser() { document, email }: FindUser
+    @CurrentUser() { document }: FindUser
   ) {
     const clinicalCase = this._clinicalCaseService.createClinicalCase(
       createClinicalCaseDto,
       document
-    )
-    await this._notificationService.sendSms(
-      email,
-      'Your clinical case has been created successfully.'
     )
     return clinicalCase
   }

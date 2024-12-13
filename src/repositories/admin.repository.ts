@@ -27,7 +27,7 @@ export class AdminRepository {
     return rows || []
   }
 
-  public async findWithLimitAndOffset(limit: number, offset: number): Promise<FindAdmin[]> {
+  public async findWithLimitAndOffset(limit: number, offset: number) {
     const rows = await this._db
       .select({
         email: adminModel.email,
@@ -40,7 +40,7 @@ export class AdminRepository {
     return rows
   }
 
-  public async find(email: Admin['email']): Promise<FindAdmin | undefined> {
+  public async find(email: Admin['email']) {
     const rows = await this._db
       .select({
         email: adminModel.email,
@@ -52,7 +52,7 @@ export class AdminRepository {
     return rows.at(0)
   }
 
-  public async getPassword(email: Admin['email']): Promise<string | undefined> {
+  public async getPassword(email: Admin['email']) {
     const rows = await this._db
       .select({
         password: adminModel.password
@@ -63,7 +63,18 @@ export class AdminRepository {
     return rows.at(0)?.password
   }
 
-  public async create(newAdmin: NewAdmin): Promise<FindAdmin | undefined> {
+  public async getLastOnline(email: Admin['email']) {
+    const rows = await this._db
+      .select({
+        lastOnline: adminModel.lastOnline
+      })
+      .from(adminModel)
+      .where(eq(adminModel.email, email))
+
+    return rows.at(0)?.lastOnline
+  }
+
+  public async create(newAdmin: NewAdmin) {
     const rows = await this._db.insert(adminModel).values(newAdmin).returning({
       email: adminModel.email,
       fullName: adminModel.fullName
@@ -72,10 +83,7 @@ export class AdminRepository {
     return rows.at(0)
   }
 
-  public async update(
-    email: Admin['email'],
-    updateAdmin: UpdateAdmin
-  ): Promise<FindAdmin | undefined> {
+  public async update(email: Admin['email'], updateAdmin: UpdateAdmin) {
     const rows = await this._db
       .update(adminModel)
       .set(updateAdmin)
@@ -88,7 +96,20 @@ export class AdminRepository {
     return rows.at(0)
   }
 
-  public async delete(email: Admin['email']): Promise<FindAdmin | undefined> {
+  public async updateLastOnline(email: Admin['email']) {
+    const rows = await this._db
+      .update(adminModel)
+      .set({ lastOnline: new Date() })
+      .where(eq(adminModel.email, email))
+      .returning({
+        email: adminModel.email,
+        fullName: adminModel.fullName
+      })
+
+    return rows.at(0)
+  }
+
+  public async delete(email: Admin['email']) {
     const rows = await this._db.delete(adminModel).where(eq(adminModel.email, email)).returning({
       email: adminModel.email,
       fullName: adminModel.fullName
@@ -123,7 +144,7 @@ export class AdminRepository {
     return { token: this.tokenize(admin), fullName: admin.fullName }
   }
 
-  private tokenize(user: FindAdmin) {
+  private tokenize(user: Omit<FindAdmin, 'lastOnline'>) {
     return sign(user, SECRET_KEY, {
       expiresIn: EXPIRES_IN,
       notBefore: '0ms',

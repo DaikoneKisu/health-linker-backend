@@ -1,4 +1,4 @@
-import { eq, and } from 'drizzle-orm'
+import { eq, and, count, inArray, gt } from 'drizzle-orm'
 import { clinicalCaseFeedbackModel } from '@/models/clinical-case-feedback.model'
 import { pgDatabase } from '@/pg-database'
 import {
@@ -7,6 +7,8 @@ import {
   UpdateClinicalCaseFeedback
 } from '@/types/clinical-case-feedback.type'
 import { PgDatabase } from '@/types/pg-database.type'
+import { FindUser } from '@/types/find-user.type'
+import { clinicalCaseModel } from '@/models/clinical-case.model'
 
 export class ClinicalCaseFeedbackRepository {
   private readonly _db: PgDatabase = pgDatabase
@@ -196,6 +198,30 @@ export class ClinicalCaseFeedbackRepository {
       .offset(limit * offset)
 
     return rows
+  }
+
+  public async findCountNotSeenRural(userDocument: FindUser['document'], lastOnlineDate: Date) {
+    const userClinicalCases = this._db
+      .select({ id: clinicalCaseModel.id })
+      .from(clinicalCaseModel)
+      .where(
+        and(
+          eq(clinicalCaseModel.ruralProfessionalDocument, userDocument),
+          eq(clinicalCaseModel.isClosed, false)
+        )
+      )
+
+    const rows = await this._db
+      .select({ count: count(clinicalCaseFeedbackModel.id) })
+      .from(clinicalCaseFeedbackModel)
+      .where(
+        and(
+          inArray(clinicalCaseFeedbackModel.clinicalCaseId, userClinicalCases),
+          gt(clinicalCaseFeedbackModel.createdAt, lastOnlineDate)
+        )
+      )
+
+    return rows.at(0)?.count
   }
 
   public async create(
