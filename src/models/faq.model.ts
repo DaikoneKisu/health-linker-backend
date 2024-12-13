@@ -5,7 +5,7 @@ export const faqModel = pgTable('frequently-asked-questions', {
   question: varchar('question').notNull(),
   answer: varchar('answer').notNull(),
   createdAt: timestamp('created_at', { withTimezone: true, precision: 6 }).notNull().defaultNow(),
-  updatedAd: timestamp('updated_at', { withTimezone: true, precision: 6 })
+  updatedAt: timestamp('updated_at', { withTimezone: true, precision: 6 })
     .notNull()
     .$onUpdate(() => new Date())
     .defaultNow()
