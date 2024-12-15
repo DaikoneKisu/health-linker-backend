@@ -83,6 +83,15 @@ export class SpecialistMentorsClinicalCaseRepository {
       .offset(limit * offset)
   }
 
+  public async findCountTotal(specialistDocument: User['document']) {
+    const cases = await this._db
+      .select({ count: countDistinct(specialistMentorsClinicalCaseModel.clinicalCaseId) })
+      .from(specialistMentorsClinicalCaseModel)
+      .where(eq(specialistMentorsClinicalCaseModel.specialistDocument, specialistDocument))
+
+    return cases.at(0)?.count ?? 0
+  }
+
   public async findCountNotSeen(specialistDocument: User['document'], lastOnlineDate: Date) {
     const cases = await this._db
       .select({ count: countDistinct(specialistMentorsClinicalCaseModel.clinicalCaseId) })

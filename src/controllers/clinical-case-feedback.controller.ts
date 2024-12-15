@@ -63,7 +63,10 @@ export class ClinicalCaseFeedbackController {
         new AdminService(
           new AdminRepository(new EncryptService()),
           new EncryptService(),
-          new UserRepository()
+          new UserRepository(),
+          new SpecialistRepository(),
+          new SpecialistMentorsClinicalCaseRepository(),
+          new ClinicalCaseFeedbackRepository()
         )
       ),
       new SpecialistMentorsClinicalCaseService(
@@ -91,7 +94,10 @@ export class ClinicalCaseFeedbackController {
           new AdminService(
             new AdminRepository(new EncryptService()),
             new EncryptService(),
-            new UserRepository()
+            new UserRepository(),
+            new SpecialistRepository(),
+            new SpecialistMentorsClinicalCaseRepository(),
+            new ClinicalCaseFeedbackRepository()
           )
         ),
         new SpecialistService(

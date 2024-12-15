@@ -43,6 +43,7 @@ import { UnprocessableContentError } from '@/exceptions/unprocessable-content-er
 import { ClinicalCaseSearchDto } from '@/dtos/clinical-case-search.dto'
 import { FindAdmin } from '@/types/admin.type'
 import { AdminService } from '@/services/admin.service'
+import { ClinicalCaseFeedbackRepository } from '@/repositories/clinical-case-feedback.repository'
 
 @JsonController('/clinical-cases')
 export class ClinicalCaseController {
@@ -69,7 +70,10 @@ export class ClinicalCaseController {
     new AdminService(
       new AdminRepository(new EncryptService()),
       new EncryptService(),
-      new UserRepository()
+      new UserRepository(),
+      new SpecialistRepository(),
+      new SpecialistMentorsClinicalCaseRepository(),
+      new ClinicalCaseFeedbackRepository()
     )
   )
   private readonly _specialistMentorsClinicalCaseService: SpecialistMentorsClinicalCaseService =

@@ -1,4 +1,4 @@
-import { eq, and, count, inArray, gt } from 'drizzle-orm'
+import { eq, and, count, inArray, gt, desc } from 'drizzle-orm'
 import { clinicalCaseFeedbackModel } from '@/models/clinical-case-feedback.model'
 import { pgDatabase } from '@/pg-database'
 import {
@@ -110,18 +110,24 @@ export class ClinicalCaseFeedbackRepository {
     return rows
   }
 
-  public async findByUser(userDocument: string): Promise<FindClinicalCaseFeedback[]> {
+  public async findByUser(userDocument: string) {
     const rows = await this._db
       .select({
         id: clinicalCaseFeedbackModel.id,
         clinicalCaseId: clinicalCaseFeedbackModel.clinicalCaseId,
+        clinicalCaseDescription: clinicalCaseModel.description,
         userDocument: clinicalCaseFeedbackModel.userDocument,
         text: clinicalCaseFeedbackModel.text,
         createdAt: clinicalCaseFeedbackModel.createdAt,
         updatedAt: clinicalCaseFeedbackModel.updatedAt
       })
       .from(clinicalCaseFeedbackModel)
+      .innerJoin(
+        clinicalCaseModel,
+        eq(clinicalCaseFeedbackModel.clinicalCaseId, clinicalCaseModel.id)
+      )
       .where(eq(clinicalCaseFeedbackModel.userDocument, userDocument))
+      .orderBy(desc(clinicalCaseFeedbackModel.createdAt))
 
     return rows
   }
