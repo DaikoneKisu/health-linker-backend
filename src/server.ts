@@ -25,7 +25,7 @@ import { ClinicalCaseFileController } from './controllers/clinical-case-file.con
 import { ChatMessageController } from './controllers/chat-message.controller'
 import { EducationalResourceController } from './controllers/educational-resource.controller'
 import { AdminService } from './services/admin.service'
-
+import { FAQController } from './controllers/faq.controller'
 const encryptService = new EncryptService()
 
 const userService = new UserService(
@@ -61,7 +61,8 @@ export const app = new App(
     ClinicalCaseFeedbackController,
     ClinicalCaseFileController,
     ChatMessageController,
-    EducationalResourceController
+    EducationalResourceController,
+    FAQController
   ],
   authorization(userService, authService, adminService),
   currentUser(userService, authService, adminService)
