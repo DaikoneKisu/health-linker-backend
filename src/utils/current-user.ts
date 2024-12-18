@@ -10,7 +10,9 @@ export function currentUser(
   authService: AuthService,
   adminService: AdminService
 ) {
-  return async (action: Action): Promise<FindUser | FindAdmin | undefined> => {
+  return async (
+    action: Action
+  ): Promise<Omit<FindUser, 'lastOnline'> | Omit<FindAdmin, 'lastOnline'> | undefined> => {
     const {
       headers: { authorization: token }
     } = action.request as { headers: { authorization: string } }

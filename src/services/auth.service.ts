@@ -67,7 +67,7 @@ export class AuthService {
     return { token: this.tokenize(user), type: user.userType }
   }
 
-  private tokenize(user: FindUser): string {
+  private tokenize(user: Omit<FindUser, 'lastOnline'>): string {
     return sign(user, SECRET_KEY, {
       expiresIn: EXPIRES_IN,
       notBefore: '0ms',
