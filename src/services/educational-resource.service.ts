@@ -38,7 +38,7 @@ export class EducationalResourceService {
   }
 
   public async createResource(
-    createChatRoomDto: CreateEducationalResourceDto,
+    createResourceDto: CreateEducationalResourceDto,
     authorEmail: Admin['email'] | null,
     authorDocument: Specialist['document'] | null
   ) {
@@ -60,8 +60,8 @@ export class EducationalResourceService {
       }
 
       return await this._educationalResourceRepository.createAdmin({
-        title: createChatRoomDto.title,
-        content: createChatRoomDto.content,
+        title: createResourceDto.title,
+        content: createResourceDto.content,
         authorEmail
       })
     }
@@ -75,8 +75,8 @@ export class EducationalResourceService {
       }
 
       return await this._educationalResourceRepository.createSpecialist({
-        title: createChatRoomDto.title,
-        content: createChatRoomDto.content,
+        title: createResourceDto.title,
+        content: createResourceDto.content,
         authorDocument
       })
     }

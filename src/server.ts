@@ -22,11 +22,11 @@ import { RuralProfessionalRepository } from '@/repositories/rural-professional.r
 import { SpecialistRepository } from '@/repositories/specialist.repository'
 import { ClinicalCaseFeedbackController } from './controllers/clinical-case-feedback.controller'
 import { ClinicalCaseFileController } from './controllers/clinical-case-file.controller'
-import { ChatRoomController } from './controllers/chat-room.controller'
 import { ChatMessageController } from './controllers/chat-message.controller'
 import { EducationalResourceController } from './controllers/educational-resource.controller'
 import { AdminService } from './services/admin.service'
-
+import { NotificationsController } from './controllers/notifications.controller'
+import { FAQController } from './controllers/faq.controller'
 const encryptService = new EncryptService()
 
 const userService = new UserService(
@@ -61,9 +61,10 @@ export const app = new App(
     SpecialistMentorsClinicalCaseController,
     ClinicalCaseFeedbackController,
     ClinicalCaseFileController,
-    ChatRoomController,
     ChatMessageController,
-    EducationalResourceController
+    EducationalResourceController,
+    NotificationsController,
+    FAQController
   ],
   authorization(userService, authService, adminService),
   currentUser(userService, authService, adminService)

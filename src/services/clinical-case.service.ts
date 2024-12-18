@@ -88,6 +88,40 @@ export class ClinicalCaseService {
     return await this._clinicalCaseRepository.findClosedWithLimitAndOffset(page - 1, size, query)
   }
 
+  public async getPaginatedNotMentoredCases(
+    page = 1,
+    size = 100,
+    query = '',
+    email: FindAdmin['email']
+  ) {
+    // Validate admin
+    const admin = await this._adminService.getAdmin(email)
+    if (!admin) {
+      throw new UnauthorizedError('No tiene permisos para esta acción.')
+    }
+
+    return await this._clinicalCaseRepository.findNotMentoredWithLimitAndOffset(
+      page - 1,
+      size,
+      query
+    )
+  }
+
+  public async getPaginatedMentoredCases(
+    page = 1,
+    size = 100,
+    query = '',
+    email: FindAdmin['email']
+  ) {
+    // Validate admin
+    const admin = await this._adminService.getAdmin(email)
+    if (!admin) {
+      throw new UnauthorizedError('No tiene permisos para esta acción.')
+    }
+
+    return await this._clinicalCaseRepository.findMentoredWithLimitAndOffset(page - 1, size, query)
+  }
+
   public async getPaginatedRecordClinicalCases(
     page: number = 1,
     size: number = 10,

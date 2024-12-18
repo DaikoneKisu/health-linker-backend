@@ -55,10 +55,8 @@ export class AuthService {
       throw new NotFoundError('El usuario con el documento provisto no está registrado.')
     }
 
-    const isPasswordValid = await this._encryptService.comparePassword(
-      password,
-      (await this._userService.getPassword(document))!
-    )
+    const dbPassword = await this._userService.getPassword(document)
+    const isPasswordValid = await this._encryptService.comparePassword(password, dbPassword!)
 
     if (!isPasswordValid) {
       //! This could be a security risk, as it could allow an attacker to enumerate users (https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html)

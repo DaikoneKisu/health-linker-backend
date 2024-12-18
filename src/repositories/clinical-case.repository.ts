@@ -1,9 +1,11 @@
-import { eq, and, isNull, sql, like, or, desc } from 'drizzle-orm'
+import { eq, and, isNull, sql, like, or, desc, inArray, notInArray, count, gt } from 'drizzle-orm'
 import { PgDatabase } from '@/types/pg-database.type'
 import { pgDatabase } from '@/pg-database'
 import { clinicalCaseModel } from '@/models/clinical-case.model'
 import { ClinicalCase, NewClinicalCase, UpdateClinicalCase } from '@/types/clinical-case.type'
 import { RuralProfessional } from '@/types/rural-professional.type'
+import { specialistMentorsClinicalCaseModel } from '@/models/specialist-mentors-clinical-case.model'
+import { clinicalCaseFeedbackModel } from '@/models/clinical-case-feedback.model'
 
 export class ClinicalCaseRepository {
   private readonly _db: PgDatabase = pgDatabase
@@ -107,6 +109,100 @@ export class ClinicalCaseRepository {
       .where(
         and(
           eq(clinicalCaseModel.isClosed, true),
+          or(
+            like(clinicalCaseModel.patientReason, `%${query}%`),
+            like(clinicalCaseModel.patientAssessment, `%${query}%`),
+            like(clinicalCaseModel.description, `%${query}%`)
+          )
+        )
+      )
+      .orderBy(desc(clinicalCaseModel.createdAt))
+      .limit(limit)
+      .offset(limit * offset)
+
+    return rows
+  }
+
+  public async findNotMentoredWithLimitAndOffset(limit: number, offset: number, query: string) {
+    const mentoredIdsSubquery = this._db
+      .selectDistinct({
+        clinicalCaseId: specialistMentorsClinicalCaseModel.clinicalCaseId
+      })
+      .from(specialistMentorsClinicalCaseModel)
+
+    const rows = await this._db
+      .select({
+        id: clinicalCaseModel.id,
+        description: clinicalCaseModel.description,
+        reason: clinicalCaseModel.reason,
+        isPublic: clinicalCaseModel.isPublic,
+        isClosed: clinicalCaseModel.isClosed,
+        patientBirthdate: clinicalCaseModel.patientBirthdate,
+        patientGender: clinicalCaseModel.patientGender,
+        patientReason: clinicalCaseModel.patientReason,
+        patientAssessment: clinicalCaseModel.patientAssessment,
+        requiredSpecialtyId: clinicalCaseModel.requiredSpecialtyId,
+        ruralProfessionalDocument: clinicalCaseModel.ruralProfessionalDocument
+      })
+      .from(clinicalCaseModel)
+      .where(
+        and(
+          eq(clinicalCaseModel.isClosed, false),
+          notInArray(clinicalCaseModel.id, mentoredIdsSubquery),
+          or(
+            like(clinicalCaseModel.patientReason, `%${query}%`),
+            like(clinicalCaseModel.patientAssessment, `%${query}%`),
+            like(clinicalCaseModel.description, `%${query}%`)
+          )
+        )
+      )
+      .orderBy(desc(clinicalCaseModel.createdAt))
+      .limit(limit)
+      .offset(limit * offset)
+
+    return rows
+  }
+
+  public async findMentoredWithLimitAndOffset(limit: number, offset: number, query: string) {
+    const mentoredIdsSubquery = this._db
+      .selectDistinct({
+        clinicalCaseId: specialistMentorsClinicalCaseModel.clinicalCaseId
+      })
+      .from(specialistMentorsClinicalCaseModel)
+
+    const feedbackCountSubquery = this._db
+      .select({
+        clinicalCaseId: clinicalCaseFeedbackModel.clinicalCaseId,
+        feedbackCount: count(clinicalCaseFeedbackModel.id).as('feedbackCount')
+      })
+      .from(clinicalCaseFeedbackModel)
+      .groupBy(clinicalCaseFeedbackModel.clinicalCaseId)
+      .as('feedbackCountSubquery')
+
+    const rows = await this._db
+      .select({
+        id: clinicalCaseModel.id,
+        description: clinicalCaseModel.description,
+        reason: clinicalCaseModel.reason,
+        isPublic: clinicalCaseModel.isPublic,
+        isClosed: clinicalCaseModel.isClosed,
+        patientBirthdate: clinicalCaseModel.patientBirthdate,
+        patientGender: clinicalCaseModel.patientGender,
+        patientReason: clinicalCaseModel.patientReason,
+        patientAssessment: clinicalCaseModel.patientAssessment,
+        requiredSpecialtyId: clinicalCaseModel.requiredSpecialtyId,
+        ruralProfessionalDocument: clinicalCaseModel.ruralProfessionalDocument,
+        feedbackCount: feedbackCountSubquery.feedbackCount
+      })
+      .from(clinicalCaseModel)
+      .leftJoin(
+        feedbackCountSubquery,
+        eq(clinicalCaseModel.id, feedbackCountSubquery.clinicalCaseId)
+      )
+      .where(
+        and(
+          eq(clinicalCaseModel.isClosed, false),
+          inArray(clinicalCaseModel.id, mentoredIdsSubquery),
           or(
             like(clinicalCaseModel.patientReason, `%${query}%`),
             like(clinicalCaseModel.patientAssessment, `%${query}%`),
@@ -318,6 +414,21 @@ export class ClinicalCaseRepository {
       .offset(limit * offset)
 
     return rows
+  }
+
+  public async findCountNotSeenAdmin(lastOnlineDate: Date) {
+    const rows = await this._db
+      .select({ count: count(clinicalCaseModel.id) })
+      .from(clinicalCaseModel)
+      .where(
+        and(
+          gt(clinicalCaseModel.createdAt, lastOnlineDate),
+          isNull(clinicalCaseModel.errasedAt),
+          eq(clinicalCaseModel.isClosed, false)
+        )
+      )
+
+    return rows.at(0)?.count
   }
 
   public async create(newClinicalCase: NewClinicalCase) {
