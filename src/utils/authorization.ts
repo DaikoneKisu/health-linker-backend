@@ -22,7 +22,8 @@ export function authorization(
       return false
     }
 
-    let userInDb: FindAdmin | FindUser | undefined = undefined
+    let userInDb: Omit<FindAdmin, 'lastOnline'> | Omit<FindUser, 'lastOnline'> | undefined =
+      undefined
     if ('document' in user) {
       userInDb = await userService.getUser(user.document)
     } else {

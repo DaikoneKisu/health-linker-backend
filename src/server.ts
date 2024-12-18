@@ -27,6 +27,8 @@ import { EducationalResourceController } from './controllers/educational-resourc
 import { AdminService } from './services/admin.service'
 import { NotificationsController } from './controllers/notifications.controller'
 import { FAQController } from './controllers/faq.controller'
+import { SpecialistMentorsClinicalCaseRepository } from './repositories/specialist-mentors-clinical-case.repository'
+import { ClinicalCaseFeedbackRepository } from './repositories/clinical-case-feedback.repository'
 const encryptService = new EncryptService()
 
 const userService = new UserService(
@@ -38,7 +40,10 @@ const userService = new UserService(
 const adminService = new AdminService(
   new AdminRepository(new EncryptService()),
   new EncryptService(),
-  new UserRepository()
+  new UserRepository(),
+  new SpecialistRepository(),
+  new SpecialistMentorsClinicalCaseRepository(),
+  new ClinicalCaseFeedbackRepository()
 )
 
 const authService: AuthService = new AuthService(
