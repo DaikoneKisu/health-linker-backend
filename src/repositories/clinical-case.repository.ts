@@ -1,4 +1,4 @@
-import { eq, and, isNull, sql, like, or, desc, inArray, notInArray, count } from 'drizzle-orm'
+import { eq, and, isNull, sql, like, or, desc, inArray, notInArray, count, gt } from 'drizzle-orm'
 import { PgDatabase } from '@/types/pg-database.type'
 import { pgDatabase } from '@/pg-database'
 import { clinicalCaseModel } from '@/models/clinical-case.model'
@@ -414,6 +414,21 @@ export class ClinicalCaseRepository {
       .offset(limit * offset)
 
     return rows
+  }
+
+  public async findCountNotSeenAdmin(lastOnlineDate: Date) {
+    const rows = await this._db
+      .select({ count: count(clinicalCaseModel.id) })
+      .from(clinicalCaseModel)
+      .where(
+        and(
+          gt(clinicalCaseModel.createdAt, lastOnlineDate),
+          isNull(clinicalCaseModel.errasedAt),
+          eq(clinicalCaseModel.isClosed, false)
+        )
+      )
+
+    return rows.at(0)?.count
   }
 
   public async create(newClinicalCase: NewClinicalCase) {

@@ -30,6 +30,8 @@ import {
 import { type EducationalResource } from '@/types/educational-resource.type'
 import { type FindUser } from '@/types/find-user.type'
 import { EducationalPaginationDto } from '@/dtos/educational-pagination.dto'
+import { SpecialistMentorsClinicalCaseRepository } from '@/repositories/specialist-mentors-clinical-case.repository'
+import { ClinicalCaseFeedbackRepository } from '@/repositories/clinical-case-feedback.repository'
 
 @JsonController('/educational-resources')
 export class EducationalResourceController {
@@ -47,7 +49,10 @@ export class EducationalResourceController {
     new AdminService(
       new AdminRepository(new EncryptService()),
       new EncryptService(),
-      new UserRepository()
+      new UserRepository(),
+      new SpecialistRepository(),
+      new SpecialistMentorsClinicalCaseRepository(),
+      new ClinicalCaseFeedbackRepository()
     )
   )
 

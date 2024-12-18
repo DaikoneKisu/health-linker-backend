@@ -1,5 +1,5 @@
 {
-  "id": "3bd62b0c-47a3-4070-ae64-b5f207337767",
+  "id": "e3a97f77-49b9-428d-bcb7-68365e9e1b97",
   "prevId": "576602f4-7a3f-41c5-8631-e0612596fbc7",
   "version": "6",
   "dialect": "postgresql",
@@ -35,6 +35,13 @@
         },
         "updated_at": {
           "name": "updated_at",
+          "type": "timestamp (6) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "last_online": {
+          "name": "last_online",
           "type": "timestamp (6) with time zone",
           "primaryKey": false,
           "notNull": true,
@@ -428,34 +435,6 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.frequently-asked-questions": {
-      "name": "frequently-asked-questions",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "question": {
-          "name": "question",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "answer": {
-          "name": "answer",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
     "public.rural_professionals": {
       "name": "rural_professionals",
       "schema": "",
@@ -716,6 +695,13 @@
         },
         "updated_at": {
           "name": "updated_at",
+          "type": "timestamp (6) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "last_online": {
+          "name": "last_online",
           "type": "timestamp (6) with time zone",
           "primaryKey": false,
           "notNull": true,

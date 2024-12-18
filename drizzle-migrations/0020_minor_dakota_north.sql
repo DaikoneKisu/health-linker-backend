@@ -1,0 +1,2 @@
+ALTER TABLE "admins" ADD COLUMN "last_online" timestamp (6) with time zone DEFAULT now() NOT NULL;--> statement-breakpoint
+ALTER TABLE "users" ADD COLUMN "last_online" timestamp (6) with time zone DEFAULT now() NOT NULL;

@@ -15,5 +15,6 @@ export const userModel = pgTable('users', {
   updatedAt: timestamp('updated_at', { withTimezone: true, precision: 6 })
     .notNull()
     .$onUpdate(() => new Date())
-    .defaultNow()
+    .defaultNow(),
+  lastOnline: timestamp('last_online', { withTimezone: true, precision: 6 }).notNull().defaultNow()
 })
