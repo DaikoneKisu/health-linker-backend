@@ -1,4 +1,4 @@
-import { eq, and } from 'drizzle-orm'
+import { eq, and, countDistinct, gt } from 'drizzle-orm'
 import { specialistMentorsClinicalCaseModel } from '@/models/specialist-mentors-clinical-case.model'
 import { pgDatabase } from '@/pg-database'
 import { PgDatabase } from '@/types/pg-database.type'
@@ -8,6 +8,8 @@ import {
   SpecialistMentorsClinicalCase,
   UpdateSpecialistMentorsClinicalCase
 } from '@/types/specialist-mentors-clinical-case.type'
+import { ClinicalCase } from '@/types/clinical-case.type'
+import { User } from '@/types/user.type'
 
 export class SpecialistMentorsClinicalCaseRepository {
   private readonly _db: PgDatabase = pgDatabase
@@ -81,6 +83,29 @@ export class SpecialistMentorsClinicalCaseRepository {
       .offset(limit * offset)
   }
 
+  public async findCountTotal(specialistDocument: User['document']) {
+    const cases = await this._db
+      .select({ count: countDistinct(specialistMentorsClinicalCaseModel.clinicalCaseId) })
+      .from(specialistMentorsClinicalCaseModel)
+      .where(eq(specialistMentorsClinicalCaseModel.specialistDocument, specialistDocument))
+
+    return cases.at(0)?.count ?? 0
+  }
+
+  public async findCountNotSeen(specialistDocument: User['document'], lastOnlineDate: Date) {
+    const cases = await this._db
+      .select({ count: countDistinct(specialistMentorsClinicalCaseModel.clinicalCaseId) })
+      .from(specialistMentorsClinicalCaseModel)
+      .where(
+        and(
+          eq(specialistMentorsClinicalCaseModel.specialistDocument, specialistDocument),
+          gt(specialistMentorsClinicalCaseModel.createdAt, lastOnlineDate)
+        )
+      )
+
+    return cases.at(0)?.count
+  }
+
   public async create(
     newSpecialistMentorsClinicalCase: NewSpecialistMentorsClinicalCase
   ): Promise<FindSpecialistMentorsClinicalCase | undefined> {
@@ -135,5 +160,17 @@ export class SpecialistMentorsClinicalCaseRepository {
       })
 
     return rows.at(0)
+  }
+
+  public async deleteAllFromCase(clinicalCaseId: ClinicalCase['id']) {
+    const rows = await this._db
+      .delete(specialistMentorsClinicalCaseModel)
+      .where(eq(specialistMentorsClinicalCaseModel.clinicalCaseId, clinicalCaseId))
+      .returning({
+        clinicalCaseId: specialistMentorsClinicalCaseModel.clinicalCaseId,
+        specialistDocument: specialistMentorsClinicalCaseModel.specialistDocument
+      })
+
+    return rows
   }
 }

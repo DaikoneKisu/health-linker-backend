@@ -7,7 +7,14 @@ import { File } from '@/types/file.type'
 
 type FileNameCallback = (error: Error | null, filename: string) => void
 
-const acceptedMimetypes = ['image/png', 'image/jpeg', 'image/avif', 'image/webp', 'application/pdf']
+const acceptedMimetypes = [
+  'image/png',
+  'image/jpeg',
+  'image/avif',
+  'image/webp',
+  'application/pdf',
+  'audio/webm'
+]
 
 const storage = diskStorage({
   destination: path.join(__dirname, '../../', PUBLIC_DIR),
@@ -34,4 +41,4 @@ export const fileUploadOptions = {
   limits
 }
 
-export const acceptedFileFormats = ['png', 'jpeg', 'jpg', 'avif', 'webp', 'pdf']
+export const acceptedFileFormats = ['png', 'jpeg', 'jpg', 'avif', 'webp', 'pdf', 'webm']

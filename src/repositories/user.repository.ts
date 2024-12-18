@@ -3,7 +3,6 @@ import { pgDatabase } from '@/pg-database'
 import { userModel } from '@/models/user.model'
 import { eq } from 'drizzle-orm'
 import { User } from '@/types/user.type'
-import { FindUser } from '@/types/find-user.type'
 import { NewUser } from '@/types/new-user.type'
 import { UpdateUser } from '@/types/update-user.type'
 
@@ -14,7 +13,7 @@ export class UserRepository {
   //   this._db = db
   // }
 
-  public async findAll(): Promise<FindUser[]> {
+  public async findAll() {
     return await this._db
       .select({
         document: userModel.document,
@@ -27,7 +26,7 @@ export class UserRepository {
       .from(userModel)
   }
 
-  public async findWithLimitAndOffset(limit: number, offset: number): Promise<FindUser[]> {
+  public async findWithLimitAndOffset(limit: number, offset: number) {
     const rows = await this._db
       .select({
         document: userModel.document,
@@ -44,7 +43,7 @@ export class UserRepository {
     return rows
   }
 
-  public async find(document: User['document']): Promise<FindUser | undefined> {
+  public async find(document: User['document']) {
     const rows = await this._db
       .select({
         document: userModel.document,
@@ -60,7 +59,7 @@ export class UserRepository {
     return rows.at(0)
   }
 
-  public async findByEmail(email: User['email']): Promise<FindUser | undefined> {
+  public async findByEmail(email: User['email']) {
     const rows = await this._db
       .select({
         document: userModel.document,
@@ -76,7 +75,16 @@ export class UserRepository {
     return rows.at(0)
   }
 
-  public async getPassword(document: User['document']): Promise<string | undefined> {
+  public async findLastOnline(document: User['document']) {
+    const rows = await this._db
+      .select({ lastOnline: userModel.lastOnline })
+      .from(userModel)
+      .where(eq(userModel.document, document))
+
+    return rows.at(0)?.lastOnline
+  }
+
+  public async getPassword(document: User['document']) {
     const rows = await this._db
       .select({
         password: userModel.password
@@ -87,7 +95,7 @@ export class UserRepository {
     return rows.at(0)?.password
   }
 
-  public async create(newUser: NewUser): Promise<FindUser | undefined> {
+  public async create(newUser: NewUser) {
     const rows = await this._db.insert(userModel).values(newUser).returning({
       document: userModel.document,
       email: userModel.email,
@@ -100,10 +108,7 @@ export class UserRepository {
     return rows.at(0)
   }
 
-  public async update(
-    document: User['document'],
-    updateUser: UpdateUser
-  ): Promise<FindUser | undefined> {
+  public async update(document: User['document'], updateUser: UpdateUser) {
     const rows = await this._db
       .update(userModel)
       .set(updateUser)
@@ -122,7 +127,26 @@ export class UserRepository {
     return rows.at(0)
   }
 
-  public async delete(document: User['document']): Promise<FindUser | undefined> {
+  public async updateLastOnline(document: User['document']) {
+    const rows = await this._db
+      .update(userModel)
+      .set({
+        lastOnline: new Date()
+      })
+      .where(eq(userModel.document, document))
+      .returning({
+        document: userModel.document,
+        email: userModel.email,
+        fullName: userModel.fullName,
+        phoneNumber: userModel.phoneNumber,
+        isVerified: userModel.isVerified,
+        userType: userModel.userType
+      })
+
+    return rows.at(0)
+  }
+
+  public async delete(document: User['document']) {
     const rows = await this._db
       .delete(userModel)
       .where(eq(userModel.document, document))

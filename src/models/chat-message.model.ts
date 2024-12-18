@@ -1,14 +1,14 @@
 import { pgTable, varchar, timestamp, serial, integer, text, pgEnum } from 'drizzle-orm/pg-core'
 import { userModel } from './user.model'
-import { chatRoomModel } from './chat-room.model'
+import { clinicalCaseModel } from './clinical-case.model'
 
 export const messageTypeEnum = pgEnum('message_type', ['text', 'image', 'audio'])
 
 export const chatMessageModel = pgTable('chat_message', {
   id: serial('id').primaryKey(),
-  roomId: integer('room_id')
+  caseId: integer('case_id')
     .notNull()
-    .references(() => chatRoomModel.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
+    .references(() => clinicalCaseModel.id, { onDelete: 'restrict', onUpdate: 'cascade' }),
   senderDocument: varchar('sender_document', { length: 10 })
     .notNull()
     .references(() => userModel.document, {

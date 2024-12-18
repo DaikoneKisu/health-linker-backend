@@ -1,0 +1,2 @@
+ALTER TABLE "frequently-asked-questions" ADD COLUMN "created_at" timestamp (6) with time zone DEFAULT now() NOT NULL;--> statement-breakpoint
+ALTER TABLE "frequently-asked-questions" ADD COLUMN "updated_at" timestamp (6) with time zone DEFAULT now() NOT NULL;

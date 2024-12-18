@@ -24,6 +24,8 @@ import { SpecialistService } from '@/services/specialist.service'
 import { UserService } from '@/services/user.service'
 import { Specialist } from '@/types/specialist.type'
 import { AdminService } from '@/services/admin.service'
+import { ClinicalCase } from '@/types/clinical-case.type'
+import { ClinicalCaseFeedbackRepository } from '@/repositories/clinical-case-feedback.repository'
 
 @JsonController('/specialist-mentors-clinical-cases')
 export class SpecialistMentorsClinicalCaseController {
@@ -47,7 +49,10 @@ export class SpecialistMentorsClinicalCaseController {
         new AdminService(
           new AdminRepository(new EncryptService()),
           new EncryptService(),
-          new UserRepository()
+          new UserRepository(),
+          new SpecialistRepository(),
+          new SpecialistMentorsClinicalCaseRepository(),
+          new ClinicalCaseFeedbackRepository()
         )
       ),
       new SpecialistService(
@@ -102,5 +107,11 @@ export class SpecialistMentorsClinicalCaseController {
     @Params() { clinicalCaseId, specialistDocument }: PathSpecialistMentorsClinicalCaseDto
   ) {
     return this._specialistMentorsClinicalCaseService.delete(clinicalCaseId, specialistDocument)
+  }
+
+  @HttpCode(200)
+  @Delete('/:clinicalCaseId')
+  public deleteAllFromCase(@Param('clinicalCaseId') clinicalCaseId: ClinicalCase['id']) {
+    return this._specialistMentorsClinicalCaseService.deleteAllFromCase(clinicalCaseId)
   }
 }

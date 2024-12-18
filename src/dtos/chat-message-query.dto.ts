@@ -5,10 +5,10 @@ export class ChatMessageQuery extends PaginationQuery {
   @IsPositive()
   @IsInt()
   @IsNumber()
-  public roomId: number
+  public caseId: number
 
-  constructor(roomId: number, page?: number, size?: number) {
+  constructor(caseId: number, page?: number, size?: number) {
     super(page, size)
-    this.roomId = roomId
+    this.caseId = caseId
   }
 }

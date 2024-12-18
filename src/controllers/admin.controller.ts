@@ -8,7 +8,8 @@ import {
   Param,
   Patch,
   Post,
-  QueryParams
+  QueryParams,
+  Res
 } from 'routing-controllers'
 import { AdminRepository } from '@/repositories/admin.repository'
 import { AdminService } from '@/services/admin.service'
@@ -18,13 +19,22 @@ import { Admin } from '@/types/admin.type'
 import { AdminCredentialsDto, CreateAdminDto, UpdateAdminDto } from '@/dtos/admin.dto'
 import { UserRepository } from '@/repositories/user.repository'
 import { AllUsersSearchQuery } from '@/dtos/all-users-search-query.dto'
+import { Specialist } from '@/types/specialist.type'
+import { SpecialistRepository } from '@/repositories/specialist.repository'
+import { SpecialistMentorsClinicalCaseRepository } from '@/repositories/specialist-mentors-clinical-case.repository'
+import { ClinicalCaseFeedbackRepository } from '@/repositories/clinical-case-feedback.repository'
+import { write } from 'xlsx'
+import express from 'express'
 
 @JsonController('/admins')
 export class AdminController {
   private readonly _adminService: AdminService = new AdminService(
     new AdminRepository(new EncryptService()),
     new EncryptService(),
-    new UserRepository()
+    new UserRepository(),
+    new SpecialistRepository(),
+    new SpecialistMentorsClinicalCaseRepository(),
+    new ClinicalCaseFeedbackRepository()
   )
 
   @HttpCode(200)
@@ -44,6 +54,22 @@ export class AdminController {
   @OnUndefined(404)
   public getOne(@Param('email') email: Admin['email']) {
     return this._adminService.getAdmin(email)
+  }
+
+  @HttpCode(200)
+  @Get('/stats/specialist/:document')
+  public async getSpecialistStats(
+    @Param('document') document: Specialist['document'],
+    @Res() response: express.Response
+  ) {
+    const wb = await this._adminService.getSpecialistStats(document)
+    const buf = write(wb, { type: 'buffer', bookType: 'xlsx' }) as Buffer
+    response.set({
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': 'attachment; filename=data.xlsx'
+    })
+
+    return response.end(buf)
   }
 
   @HttpCode(201)
