@@ -1,6 +1,7 @@
 import { Server as SocketServer } from 'socket.io'
 import { Server as NodeServer } from 'node:http'
 import { GetMessagesEvent } from './types/socket.types'
+import { ORIGIN, CREDENTIALS } from './config/env'
 
 export class SocketProvider {
   private io: SocketServer
@@ -9,9 +10,8 @@ export class SocketProvider {
     this.io = new SocketServer(server, {
       serveClient: false,
       cors: {
-        origin: 'http://localhost:5173',
-        // origin: 'https://healthlinker.saludremota.org',
-        credentials: true
+        origin: ORIGIN,
+        credentials: CREDENTIALS
       }
     })
 
